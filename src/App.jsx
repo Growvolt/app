@@ -1062,4 +1062,4 @@ const GrowvoltLanding = () => {
   );
 };
 
-export default App;
+export default GrowvoltLanding;
