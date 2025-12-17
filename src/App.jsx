@@ -244,6 +244,7 @@ const StickyHeader = ({ onNavigate }) => {
 const LeadCaptureFormSection = () => {
   const [formState, setFormState] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     setFormState({
@@ -252,13 +253,41 @@ const LeadCaptureFormSection = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    // This function handles client-side form logic.
-    // The actual email submission is handled by the Formspree action.
-    if (e.target.checkValidity()) {
-      setSubmitted(true);
-      // Optional: Clear form data after successful submission via Formspree
-      // e.target.reset(); 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    
+    // *** REPLACE 'YOUR_FORM_ID' WITH YOUR ACTUAL FORMSPREE ID ***
+    // Example: "https://formspree.io/f/xvbdmqwo"
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/movggjlj"; 
+
+    if (form.checkValidity()) {
+      setIsSubmitting(true);
+      const formData = new FormData(form);
+      
+      try {
+        const response = await fetch(FORMSPREE_ENDPOINT, {
+          method: "POST",
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (response.ok) {
+          setSubmitted(true);
+          form.reset();
+        } else {
+          // If you haven't replaced the ID yet, this might error in production
+          console.error("Form submission failed");
+          alert("There was a problem submitting your form. Please try again later.");
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+        alert("There was a network problem. Please try again.");
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -266,11 +295,19 @@ const LeadCaptureFormSection = () => {
     return (
       <section className="py-24 bg-[#050509] relative z-20 flex justify-center">
         <FadeIn className="text-center max-w-md p-8 bg-white/5 rounded-3xl border border-white/10">
-          <Check size={48} className="text-[#FF4B99] mx-auto mb-4" />
-          <h2 className="text-3xl font-bold mb-3">Thank You!</h2>
-          <p className="text-gray-400">
-            Your inquiry has been successfully sent to growvolt.us@gmail.com. We will be in touch shortly to discuss scaling your influence.
+          <div className="w-16 h-16 bg-[#5B6FFF]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+             <Check size={32} className="text-[#5B6FFF]" />
+          </div>
+          <h2 className="text-3xl font-bold mb-3 text-white">Application Received</h2>
+          <p className="text-gray-400 mb-6">
+            We've received your blueprint request. Our team will review your channel stats and email you within 24 hours.
           </p>
+          <button 
+            onClick={() => setSubmitted(false)}
+            className="text-[#5B6FFF] text-sm font-semibold hover:text-white transition-colors"
+          >
+            Send another request
+          </button>
         </FadeIn>
       </section>
     );
@@ -291,8 +328,6 @@ const LeadCaptureFormSection = () => {
 
         <FadeIn delay={0.3}>
           <form 
-            action="https://formspree.io/f/YOUR_FORM_ID" // *** REPLACE WITH YOUR ACTUAL FORMSPREE ENDPOINT ***
-            method="POST" 
             onSubmit={handleSubmit}
             className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm max-w-2xl mx-auto shadow-2xl space-y-6"
           >
@@ -307,8 +342,8 @@ const LeadCaptureFormSection = () => {
               <input type="text" name="Niche" placeholder="Your Niche (e.g. Finance, Fitness)" onChange={handleChange} required className="bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors" />
               
               <select name="Audience Size" onChange={handleChange} required className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors">
-                <option value="" disabled>Audience Size</option> 
-                <option value="< 10K">Less than 10K</option>
+                <option disabled>Audience Size</option> 
+                <option value="< 10K">Less than 10K </option>
                 <option value="10K - 100K">10K - 100K</option>
                 <option value="100K - 500K">100K - 500K</option>
                 <option value="500K - 1M">500K - 1 Million</option>
@@ -316,14 +351,23 @@ const LeadCaptureFormSection = () => {
               </select>
             </div>
             
+            {/* Hidden fields for Formspree structure */}
             <input type="hidden" name="_subject" value="New Growvolt Blueprint Request" />
-            <input type="hidden" name="_cc" value="growvolt.us@gmail.com" />
             
             <button 
               type="submit"
-              className="w-full bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99] text-white font-bold py-4 rounded-xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2"
+              disabled={isSubmitting}
+              className="w-full bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99] text-white font-bold py-4 rounded-xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Send Request & Get Blueprint <ArrowRight size={18} />
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" size={18} /> Sending...
+                </>
+              ) : (
+                <>
+                  Send Request & Get Blueprint <ArrowRight size={18} />
+                </>
+              )}
             </button>
           </form>
         </FadeIn>
@@ -1066,7 +1110,7 @@ const AIStrategySection = () => {
     setError('');
     setIdeas(null);
 
-    const apiKey = ""; 
+    const apiKey = "AIzaSyCdTT-Az2Vam6E88it_1QeyZKFUMC2DOFk"; 
     const prompt = `Generate 3 specific, viral content ideas for a creator in the ${niche} niche. Return a JSON object with a key "ideas" which is an array of objects, each having "title" and "hook". Do not include markdown formatting like \`\`\`json.`;
 
     try {
