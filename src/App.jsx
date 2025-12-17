@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { 
   Code, Rocket, TrendingUp, Play, Pause, Volume2, Maximize2, 
-  ArrowRight, ArrowLeft, MoreHorizontal, X, Instagram, Twitter, Linkedin, 
-  Mail, Menu, Youtube, Sparkles, Loader2, Lightbulb, ExternalLink, Copy, Check
+  ArrowRight, ArrowLeft, MoreHorizontal, X, Instagram, Mail, 
+  Menu, Youtube, Sparkles, Loader2, Lightbulb, ExternalLink, Copy, Check,
+  Cpu, Target, BarChart3, Globe, Shield, Zap, Phone, Database, Layers, Megaphone
 } from 'lucide-react';
 
 // ==========================================
@@ -42,6 +43,20 @@ const TikTokIcon = ({ size = 24, className, ...props }) => (
     {...props}
   >
     <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.245V2h-3.445v13.672a2.896 2.896 0 0 1-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 0 1 3.183-4.51v-3.5a6.329 6.329 0 0 0-5.394 10.692 6.33 6.33 0 0 0 10.857-4.424V8.687a8.182 8.182 0 0 0 4.773 1.526V6.79a4.831 4.831 0 0 1-1.003-.104z" />
+  </svg>
+);
+
+const WhatsAppIcon = ({ size = 24, className, ...props }) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="currentColor" 
+    className={className} 
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
   </svg>
 );
 
@@ -109,9 +124,9 @@ const StickyHeader = ({ onNavigate }) => {
   }, []);
 
   const menuItems = [
-    { label: "Case Studies", href: "#", action: () => onNavigate('home') },
-    { label: "Services", href: "#", action: () => onNavigate('home') },
-    { label: "Agency", href: "#", action: () => onNavigate('home') },
+    { label: "Case Studies", href: "#", action: () => onNavigate('casestudies') }, 
+    { label: "Services", href: "#", action: () => onNavigate('services') },
+    { label: "About Us", href: "#", action: () => onNavigate('about') },
     { label: "Contact Us", href: "#", action: () => onNavigate('contact') }, 
   ];
 
@@ -143,21 +158,25 @@ const StickyHeader = ({ onNavigate }) => {
           </div>
 
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-            {['Work', 'Services', 'Process'].map((link) => (
+            {['Case Studies', 'Services', 'Process'].map((link) => (
               <button 
                 key={link} 
-                onClick={() => onNavigate('home')}
+                onClick={() => {
+                  if (link === 'Services') onNavigate('services');
+                  else if (link === 'Case Studies') onNavigate('casestudies');
+                  else onNavigate('home');
+                }}
                 className="hover:text-white transition-colors relative group"
               >
                 {link}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-blue-500 transition-all group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#5B6FFF] transition-all group-hover:w-full" />
               </button>
             ))}
           </nav>
 
           <div className="flex items-center gap-2">
             <button 
-              onClick={() => onNavigate('contact')}
+              onClick={() => window.open("https://calendly.com/growvolt-us/30min", "_blank")}
               className="hidden sm:flex items-center px-5 py-2.5 rounded-full bg-white text-black font-semibold text-xs uppercase tracking-wider hover:bg-gray-200 transition-colors"
             >
               Book Call
@@ -204,7 +223,7 @@ const StickyHeader = ({ onNavigate }) => {
                 <button 
                   onClick={() => {
                     onNavigate('contact');
-                    setIsMenuOpen(false);
+                    setIsMobileMenuOpen(false);
                   }}
                   className="px-8 py-3 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
                 >
@@ -220,13 +239,410 @@ const StickyHeader = ({ onNavigate }) => {
 };
 
 // ==========================================
+// COMPONENT: Lead Capture Form
+// ==========================================
+const LeadCaptureFormSection = () => {
+  const [formState, setFormState] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    // This function handles client-side form logic.
+    // The actual email submission is handled by the Formspree action.
+    if (e.target.checkValidity()) {
+      setSubmitted(true);
+      // Optional: Clear form data after successful submission via Formspree
+      // e.target.reset(); 
+    }
+  };
+
+  if (submitted) {
+    return (
+      <section className="py-24 bg-[#050509] relative z-20 flex justify-center">
+        <FadeIn className="text-center max-w-md p-8 bg-white/5 rounded-3xl border border-white/10">
+          <Check size={48} className="text-[#FF4B99] mx-auto mb-4" />
+          <h2 className="text-3xl font-bold mb-3">Thank You!</h2>
+          <p className="text-gray-400">
+            Your inquiry has been successfully sent to growvolt.us@gmail.com. We will be in touch shortly to discuss scaling your influence.
+          </p>
+        </FadeIn>
+      </section>
+    );
+  }
+
+  return (
+    <section className="py-24 bg-[#050509] relative z-20 flex justify-center">
+      <div className="w-full max-w-4xl px-6">
+        <div className="text-center mb-10">
+          <FadeIn>
+            <span className="text-[#5B6FFF] text-xs font-bold tracking-widest uppercase mb-4 block">Get Started</span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Unlock Your Growth Blueprint</h2>
+            <p className="text-gray-400 max-w-lg mx-auto">
+              Tell us about your brand and audience. We'll show you how Growvolt can turn your passion into predictable revenue.
+            </p>
+          </FadeIn>
+        </div>
+
+        <FadeIn delay={0.3}>
+          <form 
+            action="https://formspree.io/f/YOUR_FORM_ID" // *** REPLACE WITH YOUR ACTUAL FORMSPREE ENDPOINT ***
+            method="POST" 
+            onSubmit={handleSubmit}
+            className="bg-white/5 border border-white/10 rounded-2xl p-8 backdrop-blur-sm max-w-2xl mx-auto shadow-2xl space-y-6"
+          >
+            <div className="grid md:grid-cols-2 gap-4">
+              <input type="text" name="First Name" placeholder="First Name" onChange={handleChange} required className="bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors" />
+              <input type="text" name="Last Name" placeholder="Last Name" onChange={handleChange} required className="bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors" />
+            </div>
+            
+            <input type="email" name="_replyto" placeholder="Your Email" onChange={handleChange} required className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors" />
+            
+            <div className="grid md:grid-cols-2 gap-4">
+              <input type="text" name="Niche" placeholder="Your Niche (e.g. Finance, Fitness)" onChange={handleChange} required className="bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors" />
+              
+              <select name="Audience Size" onChange={handleChange} required className="w-full bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors">
+                <option value="" disabled>Audience Size</option> 
+                <option value="< 10K">Less than 10K</option>
+                <option value="10K - 100K">10K - 100K</option>
+                <option value="100K - 500K">100K - 500K</option>
+                <option value="500K - 1M">500K - 1 Million</option>
+                <option value="> 1M">Over 1 Million</option>
+              </select>
+            </div>
+            
+            <input type="hidden" name="_subject" value="New Growvolt Blueprint Request" />
+            <input type="hidden" name="_cc" value="growvolt.us@gmail.com" />
+            
+            <button 
+              type="submit"
+              className="w-full bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99] text-white font-bold py-4 rounded-xl hover:scale-[1.01] active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              Send Request & Get Blueprint <ArrowRight size={18} />
+            </button>
+          </form>
+        </FadeIn>
+      </div>
+    </section>
+  );
+};
+
+
+// ==========================================
+// COMPONENT: Services Pages
+// ==========================================
+
+const BuildPage = () => (
+  <section className="min-h-screen pt-40 pb-20 bg-[#050509] relative z-20">
+    <div className="container mx-auto px-6 max-w-4xl text-center">
+      <FadeIn>
+        <span className="text-[#5B6FFF] text-xs font-bold tracking-widest uppercase mb-4 block">Growvolt Build</span>
+        <h1 className="text-4xl md:text-5xl font-bold font-serif text-white mb-6">AI-Powered Product Ecosystems</h1>
+      </FadeIn>
+      <FadeIn delay={0.2}>
+        <p className="text-gray-400 text-base md:text-lg mb-16 leading-relaxed max-w-2xl mx-auto">
+          We don't just "make websites." We engineer complete digital product ecosystems leveraging cutting-edge AI. From identifying market gaps to building robust backend infrastructure, we turn your influence into a tangible asset.
+        </p>
+      </FadeIn>
+      
+      <div className="grid md:grid-cols-2 gap-8 text-left">
+        <FadeIn delay={0.3}>
+          <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 h-full">
+            <Cpu className="text-[#5B6FFF] mb-4 h-8 w-8" />
+            <h3 className="text-xl font-bold text-white mb-3">AI Market Analysis</h3>
+            <p className="text-gray-400 text-sm">Using proprietary AI models to analyze your audience sentiment and identify the exact product they are begging to buy.</p>
+          </div>
+        </FadeIn>
+        <FadeIn delay={0.4}>
+          <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 h-full">
+            <Database className="text-[#5B6FFF] mb-4 h-8 w-8" />
+            <h3 className="text-xl font-bold text-white mb-3">Tech Infrastructure</h3>
+            <p className="text-gray-400 text-sm">Custom-coded landing pages, seamless payment gateways (Stripe/PayPal), and automated delivery systems.</p>
+          </div>
+        </FadeIn>
+      </div>
+    </div>
+  </section>
+);
+
+const LaunchPage = () => (
+  <section className="min-h-screen pt-40 pb-20 bg-[#050509] relative z-20">
+    <div className="container mx-auto px-6 max-w-4xl text-center">
+      <FadeIn>
+        <span className="text-[#5B6FFF] text-xs font-bold tracking-widest uppercase mb-4 block">Growvolt Launch</span>
+        <h1 className="text-4xl md:text-5xl font-bold font-serif text-white mb-6">High-Conversion Funnels</h1>
+      </FadeIn>
+      <FadeIn delay={0.2}>
+        <p className="text-gray-400 text-base md:text-lg mb-16 leading-relaxed max-w-2xl mx-auto">
+          Once the product exists, it needs to sell. We architect sophisticated sales funnels that guide your followers from "interested" to "invested." Our launch strategies are designed for maximum day-one revenue.
+        </p>
+      </FadeIn>
+
+      <div className="grid md:grid-cols-2 gap-8 text-left">
+        <FadeIn delay={0.3}>
+          <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 h-full">
+            <Layers className="text-[#5B6FFF] mb-4 h-8 w-8" />
+            <h3 className="text-xl font-bold text-white mb-3">Funnel Architecture</h3>
+            <p className="text-gray-400 text-sm">VSLs (Video Sales Letters), upsell/downsell flows, and checkout optimization to maximize Average Order Value (AOV).</p>
+          </div>
+        </FadeIn>
+        <FadeIn delay={0.4}>
+          <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 h-full">
+            <Mail className="text-[#5B6FFF] mb-4 h-8 w-8" />
+            <h3 className="text-xl font-bold text-white mb-3">Email Automation</h3>
+            <p className="text-gray-400 text-sm">Pre-launch hype sequences and abandoned cart recovery flows that recover 15-20% of lost revenue automatically.</p>
+          </div>
+        </FadeIn>
+      </div>
+    </div>
+  </section>
+);
+
+const ScalePage = () => (
+  <section className="min-h-screen pt-40 pb-20 bg-[#050509] relative z-20">
+    <div className="container mx-auto px-6 max-w-4xl text-center">
+      <FadeIn>
+        <span className="text-[#FF4B99] text-xs font-bold tracking-widest uppercase mb-4 block">Growvolt Scale</span>
+        <h1 className="text-4xl md:text-5xl font-bold font-serif text-white mb-6">Paid Media Amplification</h1>
+      </FadeIn>
+      <FadeIn delay={0.2}>
+        <p className="text-gray-400 text-base md:text-lg mb-16 leading-relaxed max-w-2xl mx-auto">
+          Launch revenue is just fuel. We reinvest profits into high-ROAS paid media campaigns on Meta (Facebook/Instagram) and TikTok to scale your product beyond your organic reach.
+        </p>
+      </FadeIn>
+
+      <div className="grid md:grid-cols-2 gap-8 text-left">
+        <FadeIn delay={0.3}>
+          <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 h-full">
+            <Megaphone className="text-[#FF4B99] mb-4 h-8 w-8" />
+            <h3 className="text-xl font-bold text-white mb-3">Meta Ads Management</h3>
+            <p className="text-gray-400 text-sm">Strategic media buying using lookalike audiences and retargeting to acquire customers at a profit.</p>
+          </div>
+        </FadeIn>
+        <FadeIn delay={0.4}>
+          <div className="p-8 rounded-3xl bg-white/[0.03] border border-white/10 h-full">
+            <BarChart3 className="text-[#FF4B99] mb-4 h-8 w-8" />
+            <h3 className="text-xl font-bold text-white mb-3">Creative Testing</h3>
+            <p className="text-gray-400 text-sm">Rapid A/B testing of ad creatives (UGC, static, video) to find winning angles that lower your CPA.</p>
+          </div>
+        </FadeIn>
+      </div>
+    </div>
+  </section>
+);
+
+const ServicesPage = ({ onNavigate }) => {
+  return (
+    <section className="min-h-screen pt-40 pb-20 bg-[#050509] relative z-20">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <FadeIn>
+          <div className="text-center mb-20">
+            <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">Our Services</h1>
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              End-to-end infrastructure for creator businesses. Select a phase to learn more.
+            </p>
+          </div>
+        </FadeIn>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {[
+            { id: 'build', title: "Growvolt Build", icon: <Cpu />, color: '#5B6FFF', desc: "AI-Powered Product Ecosystems" },
+            { id: 'launch', title: "Growvolt Launch", icon: <Target />, color: '#5B6FFF', desc: "High-Conversion Funnels" },
+            { id: 'scale', title: "Growvolt Scale", icon: <BarChart3 />, color: '#FF4B99', desc: "Paid Media Amplification" }
+          ].map((service, idx) => (
+            <FadeIn key={idx} delay={idx * 0.1}>
+              <div 
+                onClick={() => onNavigate(service.id)}
+                className="h-full bg-white/[0.03] border border-white/10 rounded-3xl p-8 hover:bg-white/[0.06] hover:border-blue-500/30 transition-all duration-300 cursor-pointer group"
+              >
+                <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center mb-6 border border-white/5 group-hover:bg-[#5B6FFF]/20 transition-colors">
+                  <span style={{ color: service.color }}>{service.icon}</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">{service.title}</h3>
+                <p className="text-gray-400 text-sm">{service.desc}</p>
+                <div className="mt-6 flex items-center gap-2 text-[#5B6FFF] text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                  Learn more <ArrowRight size={14} />
+                </div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ==========================================
+// COMPONENT: About Us Page
+// ==========================================
+const AboutUsPage = () => {
+  return (
+    <section className="min-h-screen pt-40 pb-20 bg-[#050509] relative z-20">
+      <div className="container mx-auto px-6 max-w-5xl">
+        <div className="mb-24">
+          <FadeIn>
+            <span className="text-[#5B6FFF] font-bold tracking-widest uppercase text-xs mb-4 block">Our Story</span>
+            <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-8">
+              Liberating Creators from the <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99]">Algorithm</span>.
+            </h1>
+          </FadeIn>
+          
+          <FadeIn delay={0.2}>
+            <div className="grid md:grid-cols-2 gap-12 text-gray-400 text-base leading-relaxed">
+              <p>
+                For too long, creators have been renters on platforms they helped build. Dependent on algorithms, fluctuating ad revenue, and third-party sponsorships. Growvolt was born from a simple realization: Influence is the new currency, but without infrastructure, it's volatile.
+              </p>
+              <p>
+                We started as a small team of engineers and marketers obsessed with one goal: To help creators build assets they actually own. Today, we provide the full-stack infrastructure—tech, product, and growth—that turns personal brands into sustainable, 7-figure equity businesses.
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 mb-24">
+          <FadeIn delay={0.3}>
+            <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-10 h-full">
+              <div className="w-12 h-12 bg-[#5B6FFF]/20 rounded-xl flex items-center justify-center mb-6">
+                <Globe className="text-[#5B6FFF]" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Our Vision</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                A world where creators are the new founders. We envision a digital economy where talent isn't just about views, but about building lasting value, community, and products that stand the test of time.
+              </p>
+            </div>
+          </FadeIn>
+
+          <FadeIn delay={0.4}>
+            <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-10 h-full">
+              <div className="w-12 h-12 bg-[#5B6FFF]/20 rounded-xl flex items-center justify-center mb-6">
+                <Shield className="text-[#5B6FFF]" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">Our Mission</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">
+                To provide the "AWS for Creators." We handle the heavy lifting—infrastructure, logistics, payment rails, and scaling systems—so you can focus on what you do best: inspiring your audience.
+              </p>
+            </div>
+          </FadeIn>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ==========================================
+// COMPONENT: Case Studies Page
+// ==========================================
+const CaseStudiesPage = () => {
+  const cases = [
+    {
+      id: 1,
+      creator: "Apex Fitness",
+      niche: "Fitness & Health",
+      result: "$1.2M Launch",
+      stat: "High-Ticket Sales",
+      strategy: "We built a premium coaching funnel integrated with a custom app. The launch sequence utilized existing YouTube traffic to drive 10k+ warm leads.",
+      image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop"
+    },
+    {
+      id: 2,
+      creator: "Crypto Daily",
+      niche: "Finance",
+      result: "300% Growth",
+      stat: "Subscriber Increase",
+      strategy: "Automated short-form content scaling across TikTok and Reels combined with a high-value newsletter subscription model.",
+      image: "https://images.unsplash.com/photo-1621504450168-b8c4375c2b0a?q=80&w=1374&auto=format&fit=crop"
+    },
+    {
+      id: 3,
+      creator: "Chef Bella",
+      niche: "Food & Culinary",
+      result: "50k Sales",
+      stat: "Digital Cookbook",
+      strategy: "Leveraged Instagram aesthetic visuals to drive traffic to a custom Shopify storefront with an optimized upsell cart flow.",
+      image: "https://images.unsplash.com/photo-1556910103-1c02745a30bf?q=80&w=1470&auto=format&fit=crop"
+    },
+    {
+      id: 4,
+      creator: "Tech Insider",
+      niche: "Tech Review",
+      result: "$50k/mo MRR",
+      stat: "Recurring Revenue",
+      strategy: "Transitioned from ad-revenue dependency to a paid private community model using Skool, managed entirely by our team.",
+      image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1470&auto=format&fit=crop"
+    }
+  ];
+
+  return (
+    <section className="min-h-screen pt-40 pb-20 bg-[#050509] relative z-20">
+      <div className="container mx-auto px-6 max-w-6xl">
+        <FadeIn>
+          <div className="text-center mb-20">
+            <h1 className="text-4xl md:text-6xl font-bold font-serif text-white mb-6">Case Studies</h1>
+            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+              Real results from real creators. See how we've helped leading voices monetize their influence.
+            </p>
+          </div>
+        </FadeIn>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {cases.map((study, idx) => (
+            <FadeIn key={idx} delay={idx * 0.1}>
+              <div className="group relative rounded-3xl overflow-hidden bg-white/[0.03] border border-white/10 hover:border-white/20 transition-all duration-500">
+                <div className="h-64 overflow-hidden relative">
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#050509] via-transparent to-transparent z-10 opacity-90" />
+                  <img 
+                    src={study.image} 
+                    alt={study.creator} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-60 group-hover:opacity-80"
+                  />
+                  <div className="absolute top-6 right-6 z-20 px-3 py-1 bg-white/10 backdrop-blur-md rounded-full border border-white/10 text-xs font-semibold text-white">
+                    {study.niche}
+                  </div>
+                </div>
+
+                <div className="p-8 relative z-20 -mt-12">
+                  <div className="flex justify-between items-end mb-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-white mb-1">{study.creator}</h3>
+                      <p className="text-[#5B6FFF] font-medium">{study.result}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Impact</p>
+                      <p className="text-gray-300 font-medium">{study.stat}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="h-px w-full bg-white/10 mb-6" />
+                  
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    {study.strategy}
+                  </p>
+
+                  <div className="mt-6 flex items-center gap-2 text-white font-medium text-sm group-hover:gap-3 transition-all cursor-pointer">
+                    View Full Case Study <ArrowRight size={16} />
+                  </div>
+                </div>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ==========================================
 // COMPONENT: Contact Page
 // ==========================================
 const ContactPage = () => {
   const [copied, setCopied] = useState(false);
 
   const copyEmail = () => {
-    // Fallback copy method for iframe contexts
     try {
       if (navigator.clipboard) {
         navigator.clipboard.writeText("growvolt.us@gmail.com");
@@ -251,19 +667,19 @@ const ContactPage = () => {
         
         <FadeIn>
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full border border-white/10 mb-6">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="w-2 h-2 rounded-full bg-[#FF4B99] animate-pulse"></span>
             <span className="text-xs font-semibold text-gray-300 tracking-wider uppercase">Open for new projects</span>
           </div>
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <h1 className="text-5xl md:text-7xl font-bold font-serif text-white mb-6">
+          <h1 className="text-3xl md:text-5xl font-bold font-serif text-white mb-6">
             Get in touch
           </h1>
         </FadeIn>
 
         <FadeIn delay={0.2}>
-          <p className="text-gray-400 text-lg md:text-xl max-w-xl mx-auto mb-16 leading-relaxed">
+          <p className="text-gray-400 text-base md:text-lg max-w-xl mx-auto mb-16 leading-relaxed">
             If you've any questions, collaboration ideas, or just want to say hello, you can reach us out directly. We're here to help you scale.
           </p>
         </FadeIn>
@@ -273,9 +689,9 @@ const ContactPage = () => {
           {/* Email Card */}
           <FadeIn delay={0.3} className="h-full">
             <div className="h-full group relative p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all duration-300 flex flex-col items-center text-center overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#5B6FFF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform duration-300">
+              <div className="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#5B6FFF] to-[#5B6FFF]/80 flex items-center justify-center mb-6 shadow-lg shadow-[#5B6FFF]/20 group-hover:scale-110 transition-transform duration-300">
                 <Mail size={32} className="text-white" />
               </div>
               
@@ -284,10 +700,10 @@ const ContactPage = () => {
               
               <button 
                 onClick={copyEmail}
-                className="relative z-10 w-full py-4 px-6 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between cursor-pointer hover:border-blue-500/50 transition-colors group/input"
+                className="relative z-10 w-full py-4 px-6 rounded-xl bg-black/40 border border-white/10 flex items-center justify-between cursor-pointer hover:border-[#5B6FFF]/50 transition-colors group/input"
               >
                 <span className="text-sm font-mono text-gray-300">growvolt.us@gmail.com</span>
-                {copied ? <Check size={16} className="text-green-400" /> : <Copy size={16} className="text-gray-500 group-hover/input:text-white transition-colors" />}
+                {copied ? <Check size={16} className="text-[#FF4B99]" /> : <Copy size={16} className="text-gray-500 group-hover/input:text-white transition-colors" />}
               </button>
             </div>
           </FadeIn>
@@ -300,16 +716,16 @@ const ContactPage = () => {
               rel="noopener noreferrer"
               className="h-full block group relative p-8 rounded-3xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-all duration-300 flex flex-col items-center text-center overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-br from-[#FF4B99]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-tr from-pink-600 to-purple-500 flex items-center justify-center mb-6 shadow-lg shadow-pink-500/20 group-hover:scale-110 transition-transform duration-300">
+              <div className="relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#FF4B99] to-[#FF4B99]/80 flex items-center justify-center mb-6 shadow-lg shadow-[#FF4B99]/20 group-hover:scale-110 transition-transform duration-300">
                 <Instagram size={32} className="text-white" />
               </div>
               
               <h3 className="relative z-10 text-white font-bold text-xl mb-2">Instagram</h3>
               <p className="relative z-10 text-gray-400 text-sm mb-6">Follow our journey & updates</p>
               
-              <div className="relative z-10 flex items-center gap-2 text-white font-semibold group-hover:text-pink-400 transition-colors">
+              <div className="relative z-10 flex items-center gap-2 text-white font-semibold group-hover:text-[#FF4B99] transition-colors">
                 <span>@grovwolt.us</span>
                 <ExternalLink size={14} />
               </div>
@@ -354,7 +770,7 @@ const InfluencerSection = () => {
   }, []);
 
   return (
-    <section className="pt-10 pb-32 bg-[#050509] relative z-20">
+    <section className="pt-10 pb-24 bg-[#050509] relative z-20">
       <div className="container mx-auto px-6 mb-12 flex flex-col items-center text-center relative">
         <FadeIn delay={0.1}>
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-white mb-2">
@@ -404,7 +820,7 @@ const InfluencerSection = () => {
         {influencers.map((influencer) => (
           <div 
             key={influencer.id}
-            className="group relative flex-shrink-0 w-[280px] h-[400px] md:w-[320px] md:h-[450px] snap-center md:snap-start rounded-[2rem] overflow-hidden cursor-pointer bg-neutral-900 border border-neutral-800 transition-transform duration-300 hover:-translate-y-2"
+            className="group relative flex-shrink-0 w-[240px] h-[360px] md:w-[300px] md:h-[420px] snap-center md:snap-start rounded-[1.5rem] overflow-hidden cursor-pointer bg-neutral-900 border border-neutral-800 transition-transform duration-300 hover:-translate-y-2"
           >
             <img 
               src={influencer.image} 
@@ -412,14 +828,14 @@ const InfluencerSection = () => {
               className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent opacity-90" />
-            <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end h-full items-center text-center">
-              <h3 className="text-2xl md:text-3xl font-bold uppercase tracking-wide text-white mb-4 drop-shadow-md">
+            <div className="absolute bottom-0 left-0 w-full p-5 flex flex-col justify-end h-full items-center text-center">
+              <h3 className="text-xl md:text-2xl font-bold uppercase tracking-wide text-white mb-3 drop-shadow-md">
                 {influencer.name}
               </h3>
-              <div className="flex items-center justify-center gap-4 text-sm font-medium">
+              <div className="flex items-center justify-center gap-3 text-xs font-medium">
                 {influencer.stats.map((stat, index) => (
-                  <div key={index} className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm py-1.5 px-3 rounded-full border border-white/10">
-                    <stat.icon size={16} className={stat.color} />
+                  <div key={index} className="flex items-center gap-1.5 bg-black/30 backdrop-blur-sm py-1 px-2.5 rounded-full border border-white/10">
+                    <stat.icon size={14} className={stat.color} />
                     <span className="text-neutral-200">{stat.count}</span>
                   </div>
                 ))}
@@ -438,7 +854,7 @@ const HorizonSeparator = () => {
     <div className="relative w-full h-[120px] -mt-[60px] pointer-events-none overflow-hidden z-30">
       <div className="absolute inset-0 flex items-end justify-center">
         <div className="w-[150%] h-[400px] rounded-[100%] border-t border-white/10 bg-[#050509] shadow-[0_-10px_40px_-5px_rgba(59,130,246,0.15)] relative top-[100px]">
-           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#5B6FFF]/50 to-transparent" />
            <div className="absolute inset-x-0 top-[6px] h-px bg-gradient-to-r from-transparent via-white/10 to-transparent w-[90%] mx-auto" />
         </div>
       </div>
@@ -471,7 +887,8 @@ const VideoPlayerUI = () => {
       </div>
       <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 to-transparent z-30 flex flex-col gap-2">
         <div className="w-full h-1 bg-white/10 rounded-full overflow-hidden cursor-pointer hover:h-2 transition-all">
-            <div className={`h-full bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 shadow-[0_0_10px_rgba(236,72,153,0.5)]`} 
+            {/* CSS Animation for smooth progress bar without JS lag */}
+            <div className={`h-full bg-gradient-to-r from-[#5B6FFF] via-[#5B6FFF] to-[#FF4B99] shadow-[0_0_10px_rgba(236,72,153,0.5)]`} 
                  style={{ 
                    width: '100%',
                    animation: isPlaying ? 'progress 60s linear infinite' : 'none',
@@ -504,7 +921,7 @@ const InfrastructureSection = () => {
           <div className="text-center max-w-4xl mx-auto mb-6">
               <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.1]">
                   Complete infrastructure to <br className="hidden sm:block" />
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 animate-gradient-x">Build & Scale</span>{' '}your product
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99] animate-gradient-x">Build & Scale</span>{' '}your product
               </h2>
           </div>
         </FadeIn>
@@ -512,7 +929,12 @@ const InfrastructureSection = () => {
         <FadeIn delay={0.2}>
           <div className="text-center max-w-2xl mx-auto mb-16">
               <p className="text-lg sm:text-xl text-neutral-400 leading-relaxed">From MVP to global scale. We provide the comprehensive technology stack and design systems you need to turn your audience into a revenue-generating digital ecosystem.</p>
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="mt-8 group inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-medium transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+              <motion.button 
+                whileHover={{ scale: 1.05 }} 
+                whileTap={{ scale: 0.95 }} 
+                onClick={() => window.open("https://calendly.com/growvolt-us/30min", "_blank")}
+                className="mt-8 group inline-flex items-center gap-2 px-6 py-3 bg-white text-black rounded-full font-medium transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+              >
                   Start Building <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </motion.button>
           </div>
@@ -520,7 +942,7 @@ const InfrastructureSection = () => {
 
         <FadeIn delay={0.3} className="w-full flex justify-center">
           <div className="w-full max-w-5xl aspect-[16/9] sm:aspect-[21/9] relative z-20">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl opacity-30 blur-2xl animate-pulse group-hover:opacity-50 transition-opacity duration-1000" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#5B6FFF] via-purple-500 to-[#FF4B99] rounded-2xl opacity-30 blur-2xl animate-pulse group-hover:opacity-50 transition-opacity duration-1000" />
               <VideoPlayerUI />
           </div>
         </FadeIn>
@@ -715,8 +1137,8 @@ const AIStrategySection = () => {
       <div className="w-full max-w-4xl px-6">
         <div className="text-center mb-10">
           <FadeIn>
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-full border border-purple-500/30 mb-4">
-              <Sparkles size={14} className="text-purple-400" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-[#5B6FFF]/20 to-[#FF4B99]/20 rounded-full border border-purple-500/30 mb-4">
+              <Sparkles size={14} className="text-[#5B6FFF]" />
               <span className="text-xs font-semibold text-purple-200 tracking-wider uppercase">AI Growth Tool</span>
             </div>
           </FadeIn>
@@ -738,18 +1160,20 @@ const AIStrategySection = () => {
                 placeholder="Enter your niche (e.g. Fitness, Crypto, Cooking)" 
                 value={niche}
                 onChange={(e) => setNiche(e.target.value)}
-                className="flex-1 bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                className="flex-1 bg-black/50 border border-white/10 rounded-xl px-5 py-4 text-white focus:outline-none focus:border-[#5B6FFF] transition-colors"
                 onKeyDown={(e) => e.key === 'Enter' && generateIdeas()}
               />
               <button 
                 onClick={generateIdeas}
                 disabled={loading || !niche}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 px-8 rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
+                className="bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99] text-white font-bold py-4 px-8 rounded-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
               >
                 {loading ? <Loader2 className="animate-spin" /> : <Sparkles size={18} />}
                 Generate ✨
               </button>
             </div>
+
+            {error && <p className="text-red-400 text-center mb-4">{error}</p>}
 
             {ideas && (
               <div className="space-y-4">
@@ -762,8 +1186,8 @@ const AIStrategySection = () => {
                     className="bg-black/40 border border-white/5 rounded-xl p-5 hover:border-white/20 transition-colors"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="bg-blue-500/20 p-2 rounded-lg mt-1">
-                        <Lightbulb size={18} className="text-blue-400" />
+                      <div className="bg-[#5B6FFF]/20 p-2 rounded-lg mt-1">
+                        <Lightbulb size={18} className="text-[#5B6FFF]" />
                       </div>
                       <div>
                         <h3 className="font-bold text-lg text-white mb-1">{idea.title}</h3>
@@ -792,16 +1216,19 @@ const Footer = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-20 mb-16">
           <div className="md:col-span-5 flex flex-col items-start">
             <FadeIn delay={0}>
-              <h2 className="text-4xl font-bold text-white mb-6 font-serif">Growvolt</h2>
+              <div className="flex items-center gap-2 mb-6 cursor-pointer" onClick={() => onNavigate('home')}>
+                <span className="font-bold text-4xl tracking-tight text-white font-serif">Growvolt</span>
+              </div>
             </FadeIn>
             <FadeIn delay={0.1}>
               <p className="text-gray-400 text-sm leading-relaxed mb-8 max-w-sm">We craft premium digital experiences that elevate brands and drive measurable results. Let's build something extraordinary together.</p>
             </FadeIn>
             <FadeIn delay={0.2}>
               <div className="flex gap-4">
-                {[{ icon: <Instagram size={18} />, href: "https://instagram.com/grovwolt.us" }, { icon: <Twitter size={18} />, href: "#" }, { icon: <Linkedin size={18} />, href: "#" }, { icon: <Mail size={18} />, href: "#" }].map((social, idx) => (
-                  <a key={idx} href={social.href} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300">{social.icon}</a>
-                ))}
+                {/* Specific Social Icons requested: Insta, Mail, Whatsapp */}
+                <a href="https://instagram.com/grovwolt.us" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"><Instagram size={18} /></a>
+                <a href="mailto:growvolt.us@gmail.com" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"><Mail size={18} /></a>
+                <a href="https://wa.me/919316821844" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"><WhatsAppIcon size={18} /></a>
               </div>
             </FadeIn>
           </div>
@@ -811,10 +1238,20 @@ const Footer = ({ onNavigate }) => {
                 <h3 className="text-white font-bold text-lg mb-6">Navigation</h3>
               </FadeIn>
               <ul className="space-y-4">
-                {['Home', 'Services', 'Work', 'About'].map((item, idx) => (
+                {['Home', 'Services', 'Case Studies', 'About'].map((item, idx) => (
                   <li key={item}>
                     <FadeIn delay={0.1 + (idx * 0.05)}>
-                      <button onClick={() => onNavigate('home')} className="text-gray-300 hover:text-white text-sm transition-colors text-left">{item}</button>
+                      <button 
+                        onClick={() => {
+                          if (item === 'Services') onNavigate('services');
+                          else if (item === 'Case Studies') onNavigate('casestudies');
+                          else if (item === 'About') onNavigate('about');
+                          else onNavigate('home');
+                        }} 
+                        className="text-gray-300 hover:text-white text-sm transition-colors text-left"
+                      >
+                        {item}
+                      </button>
                     </FadeIn>
                   </li>
                 ))}
@@ -830,10 +1267,14 @@ const Footer = ({ onNavigate }) => {
                 <h3 className="text-white font-bold text-lg mb-6">Services</h3>
               </FadeIn>
               <ul className="space-y-4">
-                {['Brand Strategy', 'Web Development', 'Digital Marketing', 'UI/UX Design', 'Content Creation'].map((item, idx) => (
-                  <li key={item}>
+                {[
+                  { name: 'Growvolt Build', id: 'build' },
+                  { name: 'Growvolt Launch', id: 'launch' },
+                  { name: 'Growvolt Scale', id: 'scale' }
+                ].map((item, idx) => (
+                  <li key={item.name}>
                     <FadeIn delay={0.2 + (idx * 0.05)}>
-                      <a href="#" className="text-gray-300 hover:text-white text-sm transition-colors">{item}</a>
+                      <button onClick={() => onNavigate(item.id)} className="text-gray-300 hover:text-white text-sm transition-colors text-left">{item.name}</button>
                     </FadeIn>
                   </li>
                 ))}
@@ -864,8 +1305,8 @@ const AnimatedGridBackground = () => (
     {/* Gradient Overlay */}
     <div className="absolute inset-0 bg-gradient-to-b from-[#050509] via-black to-[#050509] z-10" />
     {/* Orbs */}
-    <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-900/10 rounded-full blur-[128px] animate-pulse" />
-    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-900/10 rounded-full blur-[128px]" />
+    <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#5B6FFF]/10 rounded-full blur-[128px] animate-pulse" />
+    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-[#FF4B99]/10 rounded-full blur-[128px]" />
   </div>
 );
 
@@ -886,34 +1327,30 @@ const GrowvoltLanding = () => {
     window.scrollTo(0, 0);
   }, [currentView]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveStep((prev) => (prev + 1) % 3);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
-
   const steps = [
     {
       id: 1,
       title: "Build & Infrastructure",
       desc: "We engineer a robust digital foundation tailored for scale. From high-converting landing pages to seamless backend systems.",
       icon: <Code size={20} />,
-      color: "from-blue-500 to-cyan-400"
+      color: "from-[#5B6FFF] to-[#5B6FFF]", // Unified color
+      iconColor: 'text-[#5B6FFF]'
     },
     {
       id: 2,
       title: "Launch & Monetize",
       desc: "Turn influence into income. We deploy targeted campaigns and optimize your product offering for maximum conversion.",
       icon: <Rocket size={20} />,
-      color: "from-purple-500 to-pink-500"
+      color: "from-[#5B6FFF] to-[#FF4B99]", // Unified gradient
+      iconColor: 'text-[#5B6FFF]'
     },
     {
       id: 3,
       title: "Scale & Dominate",
       desc: "Data-driven iteration. We analyze user behavior to refine your funnel, expanding your reach and revenue exponentially.",
       icon: <TrendingUp size={20} />,
-      color: "from-amber-400 to-orange-500"
+      color: "from-[#FF4B99] to-[#FF4B99]", // Unified color
+      iconColor: 'text-[#FF4B99]'
     }
   ];
 
@@ -955,7 +1392,7 @@ const GrowvoltLanding = () => {
             <div className="w-full max-w-[360px] sm:max-w-4xl text-center">
               <FadeIn>
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/5 backdrop-blur-md border border-white/10 rounded-full mb-6">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#ff3b7f] shadow-[0_0_8px_rgba(255,59,127,0.9)]"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FF4B99] shadow-[0_0_8px_rgba(255,59,127,0.9)]"></span>
                   <span className="text-[11px] font-medium text-[#9a9aaa] uppercase tracking-[0.13em] hero-font">Creator Economy</span>
                 </div>
               </FadeIn>
@@ -963,7 +1400,7 @@ const GrowvoltLanding = () => {
               <FadeIn delay={0.1}>
                 <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight leading-[1.1] mb-6 relative inline-block">
                   Turn your <em className="italic">Influence</em><br />
-                  into <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-[#5b8cff] to-[#c66bff]">
+                  into <span className="relative text-transparent bg-clip-text bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99]">
                     Revenue
                   </span>
                 </h1>
@@ -974,16 +1411,32 @@ const GrowvoltLanding = () => {
               </FadeIn>
 
               <FadeIn delay={0.3}>
-                <div className="w-full max-w-[340px] mx-auto mb-2.5 p-[1px] rounded-full bg-gradient-to-br from-[#ff3b7f] via-[#7c5cff] to-[#45b5ff] shadow-[0_8px_22px_rgba(0,0,0,0.55)]">
+                <div className="w-full max-w-[340px] mx-auto mb-2.5 p-[1px] rounded-full bg-gradient-to-br from-[#FF4B99] via-[#5B6FFF] to-[#FF4B99] shadow-[0_8px_22px_rgba(0,0,0,0.55)]">
                   <div className="relative grid grid-cols-2 p-1 bg-[#0a0a0e]/95 rounded-full overflow-hidden hero-font">
-                    <div className={`absolute top-1 left-1 w-[calc(50%-4px)] h-[calc(100%-8px)] bg-white rounded-full shadow-md transition-transform duration-300 ease-[cubic-bezier(0.22,0.61,0.36,1)] ${heroState === 'book' ? 'translate-x-[100%] translate-x-2' : 'translate-x-0'}`} />
-                    <button onClick={() => setHeroState('explore')} className={`relative z-10 py-2.5 text-sm font-medium transition-colors duration-200 outline-none ${heroState === 'explore' ? 'text-[#050509] font-semibold' : 'text-[#9a9aaa]'}`}>Explore</button>
+                    {/* Animated Sliding Toggle Background */}
+                    <motion.div 
+                      className="absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-full shadow-md z-0"
+                      initial={false}
+                      animate={{ 
+                        left: heroState === 'explore' ? '4px' : 'calc(50%)' 
+                      }}
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                    
+                    {/* Buttons with smooth state change */}
+                    <button 
+                      onClick={() => setHeroState('explore')} 
+                      className={`relative z-10 py-2.5 text-sm font-medium transition-colors duration-200 outline-none ${heroState === 'explore' ? 'text-[#050509] font-bold' : 'text-[#9a9aaa] hover:text-white'}`}
+                    >
+                      Explore
+                    </button>
                     <button 
                       onClick={() => {
                         setHeroState('book');
-                        setCurrentView('contact');
+                        // Small delay to let the slide animation start before opening link
+                        setTimeout(() => window.open("https://calendly.com/growvolt-us/30min", "_blank"), 150);
                       }}
-                      className={`relative z-10 py-2.5 text-sm font-medium transition-colors duration-200 outline-none ${heroState === 'book' ? 'text-[#050509] font-semibold' : 'text-[#9a9aaa]'}`}
+                      className={`relative z-10 py-2.5 text-sm font-medium transition-colors duration-200 outline-none ${heroState === 'book' ? 'text-[#050509] font-bold' : 'text-[#9a9aaa] hover:text-white'}`}
                     >
                       Book Call
                     </button>
@@ -1005,33 +1458,36 @@ const GrowvoltLanding = () => {
 
           {/* --- 6. Process Section --- */}
           <section className="py-32 relative overflow-hidden font-sans z-10 bg-[#050509]">
-            <div className="absolute right-0 bottom-0 w-[500px] h-[500px] bg-blue-900/10 blur-[120px] rounded-full pointer-events-none" />
+            <div className="absolute right-0 bottom-0 w-[500px] h-[500px] bg-[#5B6FFF]/10 blur-[120px] rounded-full pointer-events-none" />
             <div className="max-w-4xl mx-auto px-6 relative z-10">
               <div className="text-center mb-20">
                 <FadeIn>
-                  <span className="text-blue-500 text-sm font-bold tracking-widest uppercase mb-4 block">How It Works</span>
+                  <span className="text-[#5B6FFF] text-sm font-bold tracking-widest uppercase mb-4 block">How It Works</span>
                 </FadeIn>
                 <FadeIn delay={0.1}>
-                  <h2 className="text-4xl md:text-5xl font-bold mb-4">From Concept to <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Cash Flow</span></h2>
+                  <h2 className="text-4xl md:text-5xl font-bold mb-4">From Concept to <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5B6FFF] to-[#FF4B99]">Cash Flow</span></h2>
                 </FadeIn>
                 <FadeIn delay={0.2}>
                   <p className="text-gray-400 max-w-lg mx-auto">We handle the heavy lifting. A streamlined process designed to launch your brand in record time.</p>
                 </FadeIn>
               </div>
               <div className="relative">
-                <div className="absolute left-[27px] top-8 bottom-8 w-0.5 bg-gray-800 rounded-full" />
-                <div className="absolute left-[27px] top-8 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-orange-500 rounded-full transition-all duration-1000 ease-in-out" style={{ height: `${(activeStep + 0.5) * 33}%` }} />
-                <div className="space-y-12">
+                {/* Static Gradient Line (Minimal Load) */}
+                <div className="absolute left-[27px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-[#5B6FFF]/20 via-[#5B6FFF]/20 to-[#FF4B99]/20 rounded-full" />
+
+                <div className="space-y-8">
                   {steps.map((step, index) => (
                     <FadeIn key={index} delay={0.1 * index}>
-                      <div onClick={() => setActiveStep(index)} className={`relative pl-20 transition-all duration-500 cursor-pointer group`}>
-                        <div className={`absolute left-0 top-0 w-14 h-14 rounded-full border-2 flex items-center justify-center z-10 transition-all duration-500 ${activeStep === index ? `bg-[#050508] border-transparent shadow-[0_0_30px_rgba(59,130,246,0.5)] scale-110` : 'bg-[#050508] border-gray-800 text-gray-600 scale-100'}`}>
-                          {activeStep === index && (<div className={`absolute inset-0 rounded-full bg-gradient-to-tr ${step.color} -z-10 m-[-2px]`} />)}
-                          <div className={`${activeStep === index ? 'text-white' : 'text-gray-600'}`}>{step.icon}</div>
+                      <div className="relative pl-20 group cursor-default">
+                        <div className={`absolute left-0 top-0 w-14 h-14 rounded-full border-2 flex items-center justify-center z-10 transition-colors duration-300 bg-[#050508] border-white/10 group-hover:border-[#5B6FFF]/50 group-hover:shadow-[0_0_20px_rgba(91,111,255,0.3)]`}>
+                           <div className="text-gray-600 group-hover:text-white transition-colors duration-300">
+                             {step.icon}
+                           </div>
                         </div>
-                        <div className={`p-6 rounded-2xl border transition-all duration-500 ${activeStep === index ? 'glass-card border-white/10 bg-white/5 translate-x-2' : 'border-transparent hover:bg-white/5'}`}>
-                          <h3 className={`text-xl font-bold mb-2 transition-colors duration-300 ${activeStep === index ? 'text-white' : 'text-gray-400'}`}>{step.title}</h3>
-                          <p className={`text-sm leading-relaxed transition-colors duration-300 ${activeStep === index ? 'text-gray-300' : 'text-gray-600'}`}>{step.desc}</p>
+                        {/* Reduced padding for mobile */}
+                        <div className={`p-5 md:p-6 rounded-2xl border transition-all duration-300 glass-card border-white/10 bg-white/5 hover:bg-white/10 group-hover:border-[#5B6FFF]/30`}>
+                          <h3 className={`text-lg md:text-xl font-bold mb-2 transition-colors duration-300 text-white`}>{step.title}</h3>
+                          <p className={`text-xs md:text-sm leading-relaxed transition-colors duration-300 text-gray-400 group-hover:text-gray-300`}>{step.desc}</p>
                         </div>
                       </div>
                     </FadeIn>
@@ -1040,7 +1496,12 @@ const GrowvoltLanding = () => {
               </div>
               <FadeIn delay={0.3}>
                 <div className="mt-20 text-center">
-                   <button onClick={() => setCurrentView('contact')} className="px-10 py-4 rounded-full bg-blue-600 text-white font-bold text-lg hover:bg-blue-500 transition-all shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:scale-105 active:scale-95">Start Building Today</button>
+                   <button 
+                    onClick={() => window.open("https://calendly.com/growvolt-us/30min", "_blank")}
+                    className="px-10 py-4 rounded-full bg-[#5B6FFF] text-white font-bold text-lg hover:bg-[#4a58e0] transition-all shadow-[0_0_20px_rgba(91,111,255,0.4)] hover:scale-105 active:scale-95"
+                   >
+                    Start Building Today
+                   </button>
                 </div>
               </FadeIn>
             </div>
@@ -1051,12 +1512,27 @@ const GrowvoltLanding = () => {
 
           {/* --- 8. AI Strategy Section --- */}
           <AIStrategySection />
+
+          {/* --- 9. Lead Capture Form Section (NEW) --- */}
+          <LeadCaptureFormSection />
         </>
-      ) : (
+      ) : currentView === 'contact' ? (
         <ContactPage />
+      ) : currentView === 'services' ? (
+        <ServicesPage onNavigate={setCurrentView} />
+      ) : currentView === 'build' ? (
+        <BuildPage />
+      ) : currentView === 'launch' ? (
+        <LaunchPage />
+      ) : currentView === 'scale' ? (
+        <ScalePage />
+      ) : currentView === 'casestudies' ? (
+        <CaseStudiesPage />
+      ) : (
+        <AboutUsPage />
       )}
 
-      {/* --- 9. Footer --- */}
+      {/* --- 10. Footer --- */}
       <Footer onNavigate={setCurrentView} />
     </div>
   );
