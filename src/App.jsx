@@ -1012,8 +1012,10 @@ const App = () => {
         {currentView === 'privacy' && <LegalView key="privacy" title="Privacy Policy" icon={ShieldCheck} content={[{ heading: "Data Collection", text: "We collect contact information through Calendly for strategic consultations." }, { heading: "Usage", text: "Data is strictly used for Growvolt communication and brand optimization." }, { heading: "Third-Party", text: "We use Calendly and WhatsApp. We never sell your data." }]} />}
         {currentView === 'terms' && <LegalView key="terms" title="Terms of Service" icon={Scale} content={[{ heading: "Services", text: "Includes digital product architecture and performance marketing." }, { heading: "Alignment", text: "Compensation is often tied to revenue milestones as per agreements." }, { heading: "Property", text: "Frameworks developed for your brand become your property upon completion." }]} />}
       </AnimatePresence>
-      <Footer onNavigate={setCurrentView} />
-    </>
+            <Footer onNavigate={setCurrentView} />
+    </div>
+  );
+};
   );
 };
 
