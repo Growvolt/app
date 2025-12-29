@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+function App() {
+  return (
+    <>
+{import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { 
   ArrowRight, X, Instagram, Mail, Menu, Check,
@@ -1014,9 +1017,8 @@ const App = () => {
       </AnimatePresence>
             <Footer onNavigate={setCurrentView} />
     </div>
+  </>
   );
-};
-  );
-};
+}
 
 export default App;
