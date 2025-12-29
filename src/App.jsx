@@ -1,16 +1,14 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import {
+  ArrowRight, X, Instagram, Mail, Menu, Check,
+  Cpu, XCircle, PhoneCall, BarChart, ShieldAlert, Users, Compass,
+  CheckCircle2, TrendingUp,
+  ShieldCheck, Scale
+} from 'lucide-react';
 function App() {
   return (
-    <>
-{import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { 
-  ArrowRight, X, Instagram, Mail, Menu, Check,
-  Cpu, XCircle, PhoneCall, BarChart, ShieldAlert, Users, Compass, 
-  CheckCircle2, TrendingUp, Workflow, Clock, Lock, Phone, Send, Heart,
-  ShieldCheck, FileText, Scale, Target, Lightbulb, Rocket, ChevronRight, ArrowLeft,
-  Search, Code, Video, Box, Quote, Megaphone, Layout, Repeat, Zap, BarChart3, User
-} from 'lucide-react';
-
+    <> {
 // ==========================================
 // DATA & CONFIGURATION
 // ==========================================
