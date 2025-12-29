@@ -397,6 +397,293 @@ const PainPointsSection = () => {
                   <div className="absolute inset-0 bg-gradient-to-br from-[#5B6FFF]/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
                   <div className="absolute top-8 right-10 text-6xl font-sans font-black text-white/[0.02] group-hover:text-[#5B6FFF]/[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none select-none">{point.id}</div>
                   <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 border border-white/5 group-hover:bg-[#5B6FFF]/10 group-hover:border-[#5B6FFF]/20 transition-all duration-500 relative z-10">
+                    <div className="group-hover:scale-110 group-hover:text-[#5B6FFF] transition-all duration-500">{point.icon}    left: { x: 20 },
+    right: { x: -20 },
+  };
+  
+  return (
+    <motion.div
+      initial={{ opacity: 0, ...directions[direction] }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+const WhatsAppIcon = ({ size = 24, className }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className} xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+);
+
+const SectionDivider = () => (
+  <div className="w-full flex justify-center relative z-20 pointer-events-none">
+    <div className="w-full max-w-xl h-px bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-50" />
+  </div>
+);
+
+// ==========================================
+// METHODOLOGY COMPONENTS
+// ==========================================
+
+const Bullet = ({ icon, title, desc }) => (
+  <div className="group flex items-start gap-4">
+    <div className="mt-1 flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center text-blue-500 border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+      {icon}
+    </div>
+    <div className="flex-1">
+      <h4 className="text-base md:text-lg font-bold text-white mb-0.5 font-sans">{title}</h4>
+      <p className="text-sm md:text-base text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors font-sans">{desc}</p>
+    </div>
+  </div>
+);
+
+const TestimonialCard = ({ initials, name, role, quote }) => (
+  <div className="p-8 md:p-10 rounded-[2rem] bg-[#0f0f14] border border-white/5 relative group hover:border-blue-500/30 transition-all duration-300">
+    <div className="absolute -top-4 left-10 p-2.5 rounded-xl bg-blue-600 text-white shadow-xl shadow-blue-600/40">
+      <Quote size={20} />
+    </div>
+    <p className="text-base md:text-lg text-gray-300 mb-10 italic leading-relaxed pt-4 font-sans">
+      "{quote}"
+    </p>
+    <div className="flex items-center gap-4">
+      <div className="w-12 h-12 rounded-full bg-blue-600/20 border border-blue-500/20 flex items-center justify-center text-blue-400 font-black text-sm font-sans">
+        {initials}
+      </div>
+      <div>
+        <p className="text-sm md:text-base font-bold text-white font-sans">{name}</p>
+        <p className="text-xs md:text-sm text-gray-500 font-medium tracking-wide uppercase font-sans">{role}</p>
+      </div>
+    </div>
+  </div>
+);
+
+const MergedSections = () => {
+  const [activeTab, setActiveTab] = useState('build');
+
+  const tabs = [
+    { id: 'build', label: 'Build' },
+    { id: 'launch', label: 'Launch' },
+    { id: 'scale', label: 'Scale' }
+  ];
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'build':
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center gap-4 mb-6 md:mb-8">
+              <span className="text-4xl md:text-6xl font-black text-blue-500/20 font-sans">01</span>
+              <div>
+                <h3 className="text-xl md:text-3xl font-bold text-white tracking-tight font-sans">Growvolt Build</h3>
+                <p className="text-sm md:text-base text-blue-500 font-semibold font-sans">The Precision Blueprint</p>
+              </div>
+            </div>
+            <p className="text-base md:text-lg text-gray-300 mb-8 leading-relaxed font-sans">
+              We discover the product already validated by your audience's struggles and your unique insight.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-6">
+              <Bullet icon={<Search size={18} />} title="Deep-Dive Research" desc="Analyzing audience pains and conversations—not just demographics." />
+              <Bullet icon={<Lightbulb size={18} />} title="Knowledge Synthesis" desc="Auditing content to extract your unique transformative framework." />
+              <Bullet icon={<Code size={18} />} title="Product Architecture" desc="Blueprinting the exact product at the intersection of demand and authority." />
+              <Bullet icon={<Video size={18} />} title="Asset Creation" desc="Producing core content and materials for a premium user experience." />
+            </div>
+          </div>
+        );
+      case 'launch':
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center gap-4 mb-6 md:mb-8">
+              <span className="text-4xl md:text-6xl font-black text-blue-500/20 font-sans">02</span>
+              <div>
+                <h3 className="text-xl md:text-3xl font-bold text-white tracking-tight font-sans">Growvolt Launch</h3>
+                <p className="text-sm md:text-base text-blue-500 font-semibold font-sans">Market Penetration</p>
+              </div>
+            </div>
+            <p className="text-base md:text-lg text-gray-300 mb-8 leading-relaxed font-sans">
+              We deploy your asset into the market with a conversion-optimized journey designed for high-trust sales.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-6">
+              <Bullet icon={<Compass size={18} />} title="Strategic Roadmap" desc="Coordinated deployment across social channels to build massive anticipation." />
+              <Bullet icon={<Megaphone size={18} />} title="Hype Engineering" desc="Psychology-backed messaging that frames your asset as the ultimate solution." />
+              <Bullet icon={<Layout size={18} />} title="Conversion Funnels" desc="High-converting landing pages designed to minimize friction and maximize sales." />
+              <Bullet icon={<Target size={18} />} title="Launch Execution" desc="Managing the live intake, support, and tech to ensure a flawless buying experience." />
+            </div>
+          </div>
+        );
+      case 'scale':
+        return (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex items-center gap-4 mb-6 md:mb-8">
+              <span className="text-4xl md:text-6xl font-black text-blue-500/20 font-sans">03</span>
+              <div>
+                <h3 className="text-xl md:text-3xl font-bold text-white tracking-tight font-sans">Growvolt Scale</h3>
+                <p className="text-sm md:text-base text-blue-500 font-semibold font-sans">Sustainable Velocity</p>
+              </div>
+            </div>
+            <p className="text-base md:text-lg text-gray-300 mb-8 leading-relaxed font-sans">
+              We shift from one-time launch energy to automated growth systems that compound over time.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-x-8 gap-y-6">
+              <Bullet icon={<TrendingUp size={18} />} title="Automated Funnels" desc="Evergreen systems that capture leads and close sales 24/7 autonomously." />
+              <Bullet icon={<BarChart3 size={18} />} title="Data Optimization" desc="Iterative testing of copy and creative to lower acquisition costs and increase ROI." />
+              <Bullet icon={<Repeat size={18} />} title="Retention Logic" desc="Upsell paths and community structures to maximize lifetime customer value." />
+              <Bullet icon={<Zap size={18} />} title="Ecosystem Expansion" desc="Identifying secondary product opportunities to keep your growth compounding." />
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="bg-[#0a0a0f] text-white py-16 md:py-28 font-sans">
+      <div className="max-w-7xl mx-auto px-6">
+        
+        {/* Mobile-Optimized Header */}
+        <div className="max-w-4xl mx-auto text-center mb-12 md:mb-20">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
+            <p className="text-[10px] md:text-xs text-blue-400 font-bold uppercase tracking-[0.2em] font-sans">The Growvolt Methodology</p>
+          </div>
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-6 leading-[1.1] font-sans">
+            Build, Launch, <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-300">Scale.</span>
+          </h2>
+          <p className="text-gray-400 text-base md:text-xl max-w-2xl mx-auto leading-relaxed font-sans">
+            We architect, build, and power digital assets that turn your insight into a growing revenue stream.
+          </p>
+        </div>
+
+        {/* Improved Interactive Tabs */}
+        <div className="max-w-4xl mx-auto mb-20">
+          <div className="mb-8 p-1.5 bg-white/5 rounded-2xl border border-white/5 backdrop-blur-md">
+            <div className="grid grid-cols-3 gap-2">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`relative rounded-xl py-3.5 md:py-4 text-xs md:text-base font-bold transition-all duration-300 font-sans ${
+                    activeTab === tab.id 
+                      ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30' 
+                      : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[2.5rem] border border-white/10 bg-[#0f0f14] p-8 md:p-14 shadow-3xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 blur-[100px] pointer-events-none" />
+            {renderTabContent()}
+          </div>
+        </div>
+
+        {/* Partner Success Stories */}
+        <div className="max-w-6xl mx-auto border-t border-white/5 pt-20">
+          <div className="text-center mb-12">
+            <h3 className="text-2xl md:text-3xl font-bold text-white tracking-tight font-sans">Partner Impact</h3>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-6 md:gap-8">
+            <TestimonialCard 
+              initials="SM" 
+              name="Sarah Mitchell" 
+              role="Leadership Coach" 
+              quote="Growvolt transformed my scattered knowledge into a cohesive product that my audience couldn't wait to buy." 
+            />
+            <TestimonialCard 
+              initials="MC" 
+              name="Marcus Chen" 
+              role="Tech Educator" 
+              quote="I was skeptical about working with another agency, but Growvolt is different. They actually delivered results." 
+            />
+            <TestimonialCard 
+              initials="JL" 
+              name="Jessica Lee" 
+              role="SaaS Founder" 
+              quote="The systems they built continue to pay dividends months later. It's the best investment I've made this year." 
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// ==========================================
+// SHARED UI SECTIONS (EXISTING)
+// ==========================================
+
+const PainPointsFadeIn = ({ children, delay = 0 }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: "-50px" }}
+    transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+    className="h-full"
+  >
+    {children}
+  </motion.div>
+);
+
+const PainPointsSection = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef(null);
+
+  const points = [
+    {
+      id: "01",
+      title: "Less Brand Deals, Less Control",
+      desc: "Brand deals are inconsistent, slow to close, and outside your control. One month you get paid, the next month you don’t. Relying on brands keeps your income unstable and capped.",
+      icon: <ShieldAlert className="w-5 h-5 text-white/90" />
+    },
+    {
+      id: "02",
+      title: "Audience Trust, No Scalable Income",
+      desc: "Your audience listens to you and asks for advice. But without a digital product, that trust doesn’t translate into revenue. Attention without ownership is a wasted asset.",
+      icon: <Users className="w-5 h-5 text-white/90" />
+    },
+    {
+      id: "03",
+      title: "Too Many Ideas, No Clear Product",
+      desc: "You know you should launch something — a course, guide, or system — but you’re stuck choosing. Without clarity on what they'd buy, hesitation turns into inaction.",
+      icon: <Compass className="w-5 h-5 text-white/90" />
+    }
+  ];
+
+  const handleScroll = (e) => {
+    const { scrollLeft, offsetWidth } = e.target;
+    if (offsetWidth === 0) return;
+    const index = Math.round(scrollLeft / offsetWidth);
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+    }
+  };
+
+  return (
+    <section className="py-16 md:py-24 bg-[#050509] relative z-20 overflow-hidden selection:bg-[#5B6FFF]/30">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#5B6FFF]/10 blur-[140px] rounded-full pointer-events-none opacity-50" />
+      <div className="container mx-auto px-6 relative z-10 font-sans">
+        <div className="text-center mb-10 md:mb-14">
+          <PainPointsFadeIn>
+            <h2 className="text-3xl font-semibold tracking-tight text-white mb-4 leading-tight font-sans">Your Current Situation</h2>
+            <p className="text-zinc-300 max-w-lg mx-auto text-base md:text-lg leading-relaxed font-sans">The invisible barriers keeping you from <span className="text-white font-medium">monetizing</span> your influence effectively.</p>
+          </PainPointsFadeIn>
+        </div>
+        <div ref={scrollRef} onScroll={handleScroll} className="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 pb-6 md:pb-0 snap-x snap-mandatory no-scrollbar" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+          {points.map((point, idx) => (
+            <div key={point.id} className="min-w-[100%] md:min-w-0 snap-center px-1 md:px-0" style={{ scrollSnapStop: 'always' }}>
+              <PainPointsFadeIn delay={idx * 0.1}>
+                <div className="group relative h-full pt-8 px-8 pb-5 md:pt-10 md:px-10 md:pb-7 rounded-[2.5rem] bg-[#0a0a0e] border border-white/5 hover:border-white/10 hover:-translate-y-1.5 transition-all duration-500 flex flex-col overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#5B6FFF]/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+                  <div className="absolute top-8 right-10 text-6xl font-sans font-black text-white/[0.02] group-hover:text-[#5B6FFF]/[0.05] group-hover:scale-110 transition-all duration-700 pointer-events-none select-none">{point.id}</div>
+                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 border border-white/5 group-hover:bg-[#5B6FFF]/10 group-hover:border-[#5B6FFF]/20 transition-all duration-500 relative z-10">
                     <div className="group-hover:scale-110 group-hover:text-[#5B6FFF] transition-all duration-500">{point.icon}</div>
                   </div>
                   <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#5B6FFF] transition-colors relative z-10 font-sans">{point.title}</h3>
