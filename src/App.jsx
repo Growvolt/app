@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import {
+import { 
   ArrowRight, X, Instagram, Mail, Menu, Check,
-  Cpu, XCircle, PhoneCall, BarChart, ShieldAlert, Users, Compass,
-  CheckCircle2, TrendingUp,
-  ShieldCheck, Scale
+  Cpu, XCircle, PhoneCall, BarChart, ShieldAlert, Users, Compass, 
+  CheckCircle2, TrendingUp, Workflow, Clock, Lock, Phone, Send, Heart,
+  ShieldCheck, FileText, Scale, Target, Lightbulb, Rocket, ChevronRight, ArrowLeft
 } from 'lucide-react';
-function App() {
-  return (
-    <> {
+
 // ==========================================
 // DATA & CONFIGURATION
 // ==========================================
@@ -1015,8 +1013,7 @@ const App = () => {
       </AnimatePresence>
             <Footer onNavigate={setCurrentView} />
     </div>
-  </>
   );
-}
+};
 
 export default App;
