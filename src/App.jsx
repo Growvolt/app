@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, animate, useScroll, useSpring } from "framer-motion";
 
 // --- UTILITY ---
@@ -24,42 +24,62 @@ function MoneyCounter({ value }) {
   return <motion.span>{rounded}</motion.span>;
 }
 
-// --- MINIMAL TOP HEADER COMPONENT ---
+// --- REDESIGNED HEADER COMPONENT (INTERSECTION OBSERVER APPROACH) ---
 export function Header({ items, className }) {
   const [activeTab, setActiveTab] = useState(items[0].name);
+  const isManualScrolling = useRef(false);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (document.body.getAttribute('data-scrolling') === 'true') return;
-
-      const sectionElements = items
-        .map((item) => {
-          const id = item.url === "#" ? "home" : item.url.substring(1);
-          const element = document.getElementById(id);
-          return { name: item.name, element };
-        })
-        .filter((s) => s.element);
-
-      let currentActive = items[0].name;
-
-      for (let i = sectionElements.length - 1; i >= 0; i--) {
-        const section = sectionElements[i];
-        const rect = section.element.getBoundingClientRect();
-        
-        if (rect.top <= 200) {
-          currentActive = section.name;
-          break;
-        }
-      }
-
-      setActiveTab(currentActive);
+    // 1. Create the observer to detect which section is in view
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px", // Focus on the top-middle of the viewport
+      threshold: 0,
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    
-    return () => window.removeEventListener("scroll", handleScroll);
+    const observerCallback = (entries) => {
+      // If we're mid-click-scroll, don't let the observer change the active tab
+      if (isManualScrolling.current) return;
+
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          const matchedItem = items.find(
+            (item) => (item.url === "#" ? "home" : item.url.substring(1)) === id
+          );
+          if (matchedItem) {
+            setActiveTab(matchedItem.name);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // 2. Observe all relevant sections
+    items.forEach((item) => {
+      const id = item.url === "#" ? "home" : item.url.substring(1);
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
   }, [items]);
+
+  const handleNavClick = (name) => {
+    // Set flag to stop the scroll-spy from jumping through tabs
+    isManualScrolling.current = true;
+    setActiveTab(name);
+
+    // Clear any existing timeout
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    // Re-enable scroll-spy after the smooth scroll animation is likely finished (~800ms)
+    timeoutRef.current = setTimeout(() => {
+      isManualScrolling.current = false;
+    }, 1000);
+  };
 
   return (
     <div className={cn("fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] sm:w-auto max-w-2xl transition-all duration-300", className)}>
@@ -70,11 +90,11 @@ export function Header({ items, className }) {
             <a
               key={item.name}
               href={item.url}
-              onClick={() => setActiveTab(item.name)}
+              onClick={() => handleNavClick(item.name)}
               className={cn(
                 "relative cursor-pointer text-xs sm:text-sm font-bold px-3 sm:px-6 py-2 rounded-full transition-all duration-300 whitespace-nowrap",
                 "text-white/60 hover:text-white",
-                isActive && "bg-white/10 text-white shadow-sm",
+                isActive && "text-white shadow-sm",
               )}
             >
               <span className="relative z-10">{item.name}</span>
@@ -259,8 +279,18 @@ const MetricsSection = () => {
 
 // --- MAIN LANDING PAGE ---
 export default function App() {
-  const navItems = [{ name: "Home", url: "#" }, { name: "Proof", url: "#proof" }, { name: "Process", url: "#process" }, { name: "Diagnose", url: "#apply" }];
-  const operatorData = [{ name: "Mukesh", designation: "Shadow Operator", quote: "I’m Mukesh — the one behind your launch system, turning audience demand into digital products and scalable creator-owned revenue.", src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" }, { src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format" }, { src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format" }];
+  const navItems = [
+    { name: "Home", url: "#" }, 
+    { name: "Proof", url: "#proof" }, 
+    { name: "Process", url: "#process" }, 
+    { name: "Diagnose", url: "#apply" }
+  ];
+
+  const operatorData = [
+    { name: "Mukesh", designation: "Shadow Operator", quote: "I’m Mukesh — the one behind your launch system, turning audience demand into digital products and scalable creator-owned revenue.", src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" },
+    { src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format" },
+    { src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format" }
+  ];
 
   const [followers, setFollowers] = useState("50,000");
   const [engagement, setEngagement] = useState("5");
@@ -269,7 +299,6 @@ export default function App() {
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
 
-  // Process Section Scroll Animation Logic
   const processContainerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: processContainerRef,
@@ -296,38 +325,31 @@ export default function App() {
     return () => { document.body.style.overflow = 'unset'; };
   }, [selectedStudy]);
 
-  useEffect(() => {
-    const handleGlobalClick = (e) => {
-      const link = e.target.closest('a');
-      if (!link) return;
-      const href = link.getAttribute('href');
-      if (href && href.startsWith('#')) {
-        const targetId = href === '#' ? 'home' : href.substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-          e.preventDefault();
-          document.body.setAttribute('data-scrolling', 'true');
-          const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-          const startPosition = window.scrollY;
-          const distance = targetPosition - startPosition;
-          const duration = 800;
-          let start = null;
-          const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-          const step = (timestamp) => {
-            if (!start) start = timestamp;
-            const progress = timestamp - start;
-            const percentage = Math.min(progress / duration, 1);
-            window.scrollTo(0, startPosition + distance * easeInOutCubic(percentage));
-            if (progress < duration) window.requestAnimationFrame(step);
-            else { window.scrollTo(0, targetPosition); setTimeout(() => { document.body.removeAttribute('data-scrolling'); }, 50); }
-          };
-          window.requestAnimationFrame(step);
-        }
+  // Clean Smooth Scroll Implementation
+  const handleGlobalClick = useCallback((e) => {
+    const link = e.target.closest('a');
+    if (!link) return;
+    const href = link.getAttribute('href');
+    
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      const targetId = href === '#' ? 'home' : href.substring(1);
+      const targetElement = document.getElementById(targetId);
+      
+      if (targetElement) {
+        // Modern approach to smooth scrolling
+        window.scrollTo({
+          top: targetElement.offsetTop - 100, // Offset for the fixed header
+          behavior: "smooth"
+        });
       }
-    };
-    document.addEventListener('click', handleGlobalClick);
-    return () => {};
+    }
   }, []);
+
+  useEffect(() => {
+    document.addEventListener('click', handleGlobalClick);
+    return () => document.removeEventListener('click', handleGlobalClick);
+  }, [handleGlobalClick]);
 
   const caseStudies = [
     { 
@@ -435,6 +457,7 @@ export default function App() {
       <style dangerouslySetInnerHTML={{__html: `
         .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        html { scroll-behavior: smooth; }
       `}} />
       <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
