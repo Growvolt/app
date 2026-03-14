@@ -31,15 +31,13 @@ export function Header({ items, className }) {
   const timeoutRef = useRef(null);
 
   useEffect(() => {
-    // 1. Create the observer to detect which section is in view
     const observerOptions = {
       root: null,
-      rootMargin: "-20% 0px -70% 0px", // Focus on the top-middle of the viewport
+      rootMargin: "-20% 0px -70% 0px",
       threshold: 0,
     };
 
     const observerCallback = (entries) => {
-      // If we're mid-click-scroll, don't let the observer change the active tab
       if (isManualScrolling.current) return;
 
       entries.forEach((entry) => {
@@ -57,7 +55,6 @@ export function Header({ items, className }) {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
 
-    // 2. Observe all relevant sections
     items.forEach((item) => {
       const id = item.url === "#" ? "home" : item.url.substring(1);
       const element = document.getElementById(id);
@@ -68,14 +65,11 @@ export function Header({ items, className }) {
   }, [items]);
 
   const handleNavClick = (name) => {
-    // Set flag to stop the scroll-spy from jumping through tabs
     isManualScrolling.current = true;
     setActiveTab(name);
 
-    // Clear any existing timeout
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-    // Re-enable scroll-spy after the smooth scroll animation is likely finished (~800ms)
     timeoutRef.current = setTimeout(() => {
       isManualScrolling.current = false;
     }, 1000);
@@ -136,7 +130,7 @@ const AnimatedTestimonials = ({ testimonials, className }) => {
                 <motion.div
                   key={testimonial.src}
                   initial={{ opacity: 0, scale: 0.9, z: -100, rotate: rotations[index % rotations.length] }}
-                  animate={{
+                  whileInView={{
                     opacity: isActive(index) ? 1 : 0.7,
                     scale: isActive(index) ? 1 : 0.95,
                     z: isActive(index) ? 0 : -100,
@@ -144,16 +138,28 @@ const AnimatedTestimonials = ({ testimonials, className }) => {
                     zIndex: isActive(index) ? 999 : testimonials.length + 2 - index,
                     y: isActive(index) ? [0, -40, 0] : 0,
                   }}
-                  className="absolute inset-0 origin-bottom"
+                  viewport={{ once: true, margin: "-50px" }}
+                  className="absolute inset-0 origin-bottom transform-gpu will-change-transform"
                 >
-                  <img src={testimonial.src} alt={testimonial.name} className="h-full w-full rounded-[2rem] object-cover object-center shadow-2xl border border-gray-100" />
+                  <img 
+                    src={testimonial.src} 
+                    alt={testimonial.name} 
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full rounded-[2rem] object-cover object-center shadow-2xl border border-gray-100 bg-gray-100" 
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
         </div>
         <div className="flex justify-center flex-col py-2 text-left">
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ y: 0, opacity: 1 }}>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }} 
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            className="transform-gpu"
+          >
             <h3 className="text-2xl font-black text-[#141414]">{testimonials[active].name}</h3>
             <p className="text-sm font-bold text-[#F4753D] uppercase tracking-widest mt-1">{testimonials[active].designation}</p>
             <p className="text-lg md:text-xl font-medium text-gray-500 mt-6 leading-relaxed">{testimonials[active].quote}</p>
@@ -189,8 +195,8 @@ const ThreeLayerAlignment = () => {
 
   return (
     <div id="alignment" className="bg-gradient-to-br from-black to-[#1a0600] sm:rounded-[3rem] mx-0 sm:mx-6 px-4 py-16 sm:py-24 max-w-[1200px] lg:mx-auto relative overflow-hidden antialiased font-sans">
-      <div className="absolute top-0 right-0 w-64 h-64 bg-[#F4753D]/10 rounded-full blur-[80px] z-0" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-[80px] z-0" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-[#F4753D]/10 rounded-full blur-[80px] z-0 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full blur-[80px] z-0 pointer-events-none" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="max-w-2xl mb-12 sm:mb-16">
@@ -208,7 +214,7 @@ const ThreeLayerAlignment = () => {
             <motion.div
               key={idx}
               whileHover={{ y: -5 }}
-              className={`relative flex flex-col justify-between p-6 sm:p-8 rounded-[2rem] transition-all duration-500 h-auto md:min-h-[420px] overflow-hidden group ${
+              className={`relative flex flex-col justify-between p-6 sm:p-8 rounded-[2rem] transition-all duration-500 h-auto md:min-h-[420px] overflow-hidden group transform-gpu ${
                 pillar.highlight 
                 ? 'bg-white shadow-xl scale-[1.02] md:scale-100' 
                 : 'bg-gradient-to-br from-black to-[#1a0600] border border-white/5'
@@ -227,13 +233,15 @@ const ThreeLayerAlignment = () => {
                 </p>
               </div>
 
-              <div className="relative h-32 sm:h-40 w-full rounded-xl overflow-hidden mt-4">
+              <div className="relative h-32 sm:h-40 w-full rounded-xl overflow-hidden mt-4 bg-gray-900">
                 <img 
                   src={pillar.image} 
                   alt={pillar.title} 
-                  className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700 will-change-transform"
                 />
-                <div className={`absolute inset-0 ${
+                <div className={`absolute inset-0 pointer-events-none ${
                   pillar.highlight 
                   ? 'bg-gradient-to-t from-white/40 to-transparent' 
                   : 'bg-gradient-to-t from-[#0A0A0A] to-transparent opacity-60'
@@ -337,7 +345,6 @@ export default function App() {
       const targetElement = document.getElementById(targetId);
       
       if (targetElement) {
-        // Modern approach to smooth scrolling
         window.scrollTo({
           top: targetElement.offsetTop - 100, // Offset for the fixed header
           behavior: "smooth"
@@ -545,9 +552,15 @@ export default function App() {
               <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 md:mb-8">Hear From <span className="text-[#F4753D]">Creator Partners</span></h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 text-left">
                   {testimonialPartners.map((p, idx) => (
-                    <div key={idx} className="glass-card rounded-[2rem] p-6 md:p-8 relative">
+                    <div key={idx} className="glass-card rounded-[2rem] p-6 md:p-8 relative transform-gpu">
                       <div className="flex items-center gap-4 mb-6">
-                        <img src={p.img} className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-white/20 object-cover" alt="" />
+                        <img 
+                          src={p.img} 
+                          loading="lazy" 
+                          decoding="async" 
+                          className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-white/20 object-cover bg-white/10" 
+                          alt="" 
+                        />
                         <div><h4 className="text-white font-bold">{p.name}</h4><p className="text-xs text-[#F4753D] font-medium mt-1">{p.stats}</p></div>
                       </div>
                       <p className="text-gray-300 text-sm leading-relaxed mb-6 italic">{p.quote}</p>
@@ -570,11 +583,17 @@ export default function App() {
                     layoutId={`study-${study.id}`} 
                     key={study.id} 
                     onClick={() => setSelectedStudy(study)} 
-                    className="group bg-white border border-gray-200/80 rounded-[2rem] p-5 cursor-pointer shadow-[0_12px_35px_rgba(0,0,0,0.08)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col transform-gpu"
+                    className="group bg-white border border-gray-200/80 rounded-[2rem] p-5 cursor-pointer shadow-[0_12px_35px_rgba(0,0,0,0.08)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col transform-gpu will-change-transform"
                   >
-                    <div className="relative w-full h-[220px] rounded-2xl overflow-hidden mb-5">
-                      <img src={study.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/10 to-transparent"></div>
+                    <div className="relative w-full h-[220px] rounded-2xl overflow-hidden mb-5 bg-gray-100">
+                      <img 
+                        src={study.image} 
+                        loading="lazy" 
+                        decoding="async" 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 transform-gpu" 
+                        alt="" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#141414]/90 via-[#141414]/10 to-transparent pointer-events-none"></div>
                       <div className="absolute bottom-4 left-5 right-5">
                         <div className="flex flex-col mb-1.5">
                            <span className="text-white text-xs md:text-sm font-black tracking-tight mb-0.5">{study.handle}</span>
@@ -619,13 +638,19 @@ export default function App() {
               <div className="flex-1 overflow-y-auto no-scrollbar pb-16">
                 <div className="flex flex-col items-center">
                   {/* Image Container - Optimized for Square Assets */}
-                  <div className="w-full flex justify-center bg-gray-50 md:bg-white  md:pt-0">
+                  <div className="w-full flex justify-center bg-gray-50 md:bg-white md:pt-0">
                     <div className="relative w-full max-w-full md:max-w-2xl aspect-square md:aspect-video lg:aspect-square md:max-h-[50vh] shrink-0 overflow-hidden md:rounded-b-[2rem] shadow-sm">
-                      <img src={selectedStudy.image} className="w-full h-full object-cover transform-gpu" alt="" />
+                      {/* Modal image is loaded eagerly because it's immediately needed by the user interaction */}
+                      <img 
+                        src={selectedStudy.image} 
+                        loading="eager"
+                        className="w-full h-full object-cover transform-gpu" 
+                        alt="" 
+                      />
                     </div>
                   </div>
                   
-                  {/* Header Content - Now consistent across PC and Mobile (placed below image) */}
+                  {/* Header Content */}
                   <div className="w-full px-6 py-8 md:px-12 lg:px-20 text-center md:text-left">
                     <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
                         <span className="bg-[#F4753D] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.handle}</span>
@@ -715,11 +740,11 @@ export default function App() {
           <h2 className="text-4xl md:text-5xl font-bold mb-16 md:mb-24 text-[#141414]">The Creator Monetization <span className="text-[#F4753D]">System</span></h2>
           
           <div ref={processContainerRef} className="relative text-left max-w-3xl mx-auto">
-              {/* Background Animated Line */}
-              <div className="absolute top-4 bottom-4 left-1/2 -translate-x-1/2 w-[2px] bg-gray-200 overflow-hidden">
+              {/* Background Animated Line - Optimized with GPU transform */}
+              <div className="absolute top-4 bottom-4 left-1/2 -translate-x-1/2 w-[2px] bg-gray-200 overflow-hidden transform-gpu">
                 <motion.div 
-                  style={{ scaleY, originY: 0 }}
-                  className="w-full h-full bg-gradient-to-b from-[#F4753D] to-[#F4753D]/30"
+                  style={{ scaleY, originY: 0, willChange: "transform" }}
+                  className="w-full h-full bg-gradient-to-b from-[#F4753D] to-[#F4753D]/30 transform-gpu"
                 />
               </div>
 
@@ -735,8 +760,8 @@ export default function App() {
                       <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="text-right pr-4 md:pr-12"
+                        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                        className="text-right pr-4 md:pr-12 transform-gpu will-change-transform"
                       >
                         <h4 className="text-lg md:text-2xl font-black text-[#141414] leading-tight">{s.h}</h4>
                         <p className="text-[10px] md:text-xs text-[#F4753D] font-black tracking-widest uppercase mt-2">{s.n}</p>
@@ -745,16 +770,16 @@ export default function App() {
                       <div className="relative flex justify-center z-10">
                         <motion.div 
                           whileInView={{ scale: [0, 1.2, 1] }}
-                          viewport={{ once: true }}
-                          className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-white border-[3px] md:border-4 border-[#F4753D] shadow-sm"
+                          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                          className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-white border-[3px] md:border-4 border-[#F4753D] shadow-sm transform-gpu will-change-transform"
                         />
                       </div>
                       
                       <motion.div 
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="pl-4 md:pl-12"
+                        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                        className="pl-4 md:pl-12 transform-gpu will-change-transform"
                       >
                         <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed">{s.c}</p>
                       </motion.div>
@@ -764,8 +789,8 @@ export default function App() {
                       <motion.div 
                         initial={{ opacity: 0, x: -20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="text-right pr-4 md:pr-12"
+                        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                        className="text-right pr-4 md:pr-12 transform-gpu will-change-transform"
                       >
                         <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed">{s.c}</p>
                       </motion.div>
@@ -773,16 +798,16 @@ export default function App() {
                       <div className="relative flex justify-center z-10">
                         <motion.div 
                           whileInView={{ scale: [0, 1.2, 1] }}
-                          viewport={{ once: true }}
-                          className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-[#141414] border-[3px] md:border-4 border-white shadow-sm"
+                          viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                          className="w-5 h-5 md:w-7 md:h-7 rounded-full bg-[#141414] border-[3px] md:border-4 border-white shadow-sm transform-gpu will-change-transform"
                         />
                       </div>
                       
                       <motion.div 
                         initial={{ opacity: 0, x: 20 }}
                         whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="pl-4 md:pl-12"
+                        viewport={{ once: true, margin: "0px 0px -100px 0px" }}
+                        className="pl-4 md:pl-12 transform-gpu will-change-transform"
                       >
                         <h4 className="text-lg md:text-2xl font-black text-[#141414] leading-tight">{s.h}</h4>
                         <p className="text-[10px] md:text-xs text-[#F4753D] font-black tracking-widest uppercase mt-2">{s.n}</p>
@@ -805,7 +830,12 @@ export default function App() {
             <AnimatedTestimonials testimonials={operatorData} />
           </div>
           <div className="flex justify-center mb-12 md:mb-16">
-            <motion.div initial={{ height: 0 }} whileInView={{ height: 60 }} viewport={{ once: true }} className="w-0.5 bg-gradient-to-b from-[#F4753D] to-transparent md:h-20" />
+            <motion.div 
+              initial={{ height: 0 }} 
+              whileInView={{ height: 60 }} 
+              viewport={{ once: true, margin: "0px 0px -50px 0px" }} 
+              className="w-0.5 bg-gradient-to-b from-[#F4753D] to-transparent md:h-20 transform-gpu will-change-transform" 
+            />
           </div>
         </div>
 
