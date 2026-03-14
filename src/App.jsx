@@ -302,10 +302,11 @@ export default function App() {
 
   const [followers, setFollowers] = useState("50,000");
   const [engagement, setEngagement] = useState("5");
-  const [revenue, setRevenue] = useState(0);
-  const [isCalculated, setIsCalculated] = useState(false);
+  const [revenue, setRevenue] = useState(49000);
+  const [isCalculated, setIsCalculated] = useState(true);
   const [selectedStudy, setSelectedStudy] = useState(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const processContainerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -326,7 +327,39 @@ export default function App() {
     setIsCalculated(true);
   };
 
-  const handleApplySubmit = (e) => { e.preventDefault(); setFormSubmitted(true); };
+  const handleApplySubmit = async (e) => { 
+    e.preventDefault(); 
+    setIsSubmitting(true);
+    
+    const form = e.target;
+    const data = new FormData(form);
+
+    try {
+      const response = await fetch("https://formspree.io/f/xwvrqaov", {
+        method: "POST",
+        body: data,
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      if (response.ok) {
+        setFormSubmitted(true);
+        form.reset();
+        
+        // Reset back to normal form after 20 seconds
+        setTimeout(() => {
+          setFormSubmitted(false);
+        }, 20000);
+      } else {
+        console.error("Form submission failed.");
+      }
+    } catch (error) {
+      console.error("Network error during form submission.", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     document.body.style.overflow = selectedStudy ? 'hidden' : 'unset';
@@ -641,9 +674,9 @@ export default function App() {
               <div className="flex-1 overflow-y-auto no-scrollbar pb-16">
                 <div className="flex flex-col items-center">
                   
-                  {/* Image Container - Always visible immediately */}
-                  <div className="w-full flex justify-center bg-gray-50 md:bg-white md:pt-0">
-                    <div className="relative w-full max-w-full md:max-w-2xl aspect-square md:aspect-video lg:aspect-square md:max-h-[50vh] shrink-0 overflow-hidden md:rounded-b-[2rem] shadow-sm">
+                  {/* Image Container - Framed on mobile, full width on desktop */}
+                  <div className="w-full flex justify-center bg-white pt-8 md:pt-0 px-6 md:px-0">
+                    <div className="relative w-full max-w-[280px] sm:max-w-sm md:max-w-2xl aspect-square md:aspect-video lg:aspect-square md:max-h-[50vh] shrink-0 overflow-hidden rounded-[2rem] md:rounded-none md:rounded-b-[2rem] shadow-xl md:shadow-sm">
                       <img 
                         src={selectedStudy.image} 
                         loading="eager"
@@ -918,12 +951,14 @@ export default function App() {
             ) : (
               <motion.form initial={{ opacity: 0 }} animate={{ opacity: 1 }} onSubmit={handleApplySubmit} className="max-w-2xl mx-auto text-left">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8">
-                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-solid fa-layer-group text-gray-400 ml-4 text-base"></i><input required type="text" placeholder="Creator Niche" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-brands fa-instagram text-gray-400 ml-4 text-base"></i><input required type="text" placeholder="IG Handle (@creator)" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-solid fa-eye text-gray-400 ml-4 text-base"></i><input required type="number" placeholder="Avg. Story Views" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
-                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-brands fa-whatsapp text-gray-400 ml-4 text-base"></i><input required type="tel" placeholder="WhatsApp Number" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-solid fa-layer-group text-gray-400 ml-4 text-base"></i><input required type="text" name="niche" placeholder="Creator Niche" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-brands fa-instagram text-gray-400 ml-4 text-base"></i><input required type="text" name="handle" placeholder="IG Handle (@creator)" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-solid fa-eye text-gray-400 ml-4 text-base"></i><input required type="number" name="views" placeholder="Avg. Story Views" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-2xl p-1.5 flex items-center"><i className="fa-brands fa-whatsapp text-gray-400 ml-4 text-base"></i><input required type="tel" name="whatsapp" placeholder="WhatsApp Number" className="w-full bg-transparent outline-none px-4 py-2.5 text-[#141414] placeholder-gray-400 font-semibold" /></div>
                 </div>
-                <button type="submit" className="w-full bg-[#141414] hover:bg-[#F4753D] text-white px-8 py-3.5 rounded-2xl font-bold transition-all shadow-lg text-base md:text-lg flex items-center justify-center gap-2 group">Get My Monetization Plan <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i></button>
+                <button type="submit" disabled={isSubmitting} className="w-full bg-[#141414] hover:bg-[#F4753D] text-white px-8 py-3.5 rounded-2xl font-bold transition-all shadow-lg text-base md:text-lg flex items-center justify-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed">
+                  {isSubmitting ? "Sending..." : <>Get My Monetization Plan <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i></>}
+                </button>
               </motion.form>
             )}</AnimatePresence>
       </section>
