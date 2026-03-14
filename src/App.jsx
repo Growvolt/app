@@ -82,7 +82,7 @@ export function Header({ items, className }) {
   };
 
   return (
-    <div className={cn("fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[100] w-[95%] sm:w-auto max-w-2xl transition-all duration-300", className)}>
+    <div className={cn("fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-[1000] w-[95%] sm:w-auto max-w-2xl transition-all duration-300", className)}>
       <div className="flex items-center justify-between sm:justify-center gap-1 sm:gap-6 bg-[#141414]/85 border border-white/10 backdrop-blur-2xl backdrop-saturate-200 py-1.5 px-2 sm:px-4 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.15)] w-full">
         {items.map((item) => {
           const isActive = activeTab === item.name;
@@ -288,8 +288,8 @@ export default function App() {
 
   const operatorData = [
     { name: "Mukesh", designation: "Shadow Operator", quote: "I’m Mukesh — the one behind your launch system, turning audience demand into digital products and scalable creator-owned revenue.", src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" },
-    { src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format" },
-    { src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format" }
+    { src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" },
+    { src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" }
   ];
 
   const [followers, setFollowers] = useState("50,000");
@@ -357,7 +357,7 @@ export default function App() {
       handle: "@eat_with_hetvi",
       niche: "Meal Planning & Healthy Eating", 
       title: "Healthy Eating System", 
-      image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=1200&auto=format&fit=crop", 
+      image: "https://i.ibb.co/W4Tm9pQS/hetvi.webp?q=80&w=1200&auto=format&fit=crop", 
       shortDesc: "Moving from brand collaborations to owned recurring revenue with a system + community.",
       revenue: "$4,200 Launch",
       stats: { audience: "~22k Instagram", revenue: "~$4,200 (Launch) + ~$1,200 MRR" },
@@ -384,7 +384,7 @@ export default function App() {
       handle: "@everthewanderer",
       niche: "Travel & iPhone Photography", 
       title: "Travel Photography System", 
-      image: "https://images.unsplash.com/photo-1517836357463-d25dfe09ce14?q=80&w=1200&auto=format&fit=crop", 
+      image: "https://i.ibb.co/SqGN5Xy/wandrer.webp?q=80&w=1200&auto=format&fit=crop", 
       shortDesc: "Helping travelers replicate professional results using just their phones.",
       revenue: "$5,800 Launch",
       stats: { audience: "~60k Instagram", revenue: "~$5,800 (Launch)" },
@@ -411,7 +411,7 @@ export default function App() {
       handle: "@martinwikestad",
       niche: "Architecture & Landscape Photography", 
       title: "Composition & Editing Course", 
-      image: "https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=1200&auto=format&fit=crop", 
+      image: "https://i.ibb.co/mF8kn7hn/martin.webp?q=80&w=1200&auto=format&fit=crop", 
       shortDesc: "Monetizing the process behind the photos for an architecture-loving audience.",
       revenue: "$6,400 Launch",
       stats: { audience: "~70k Instagram", revenue: "~$6,400 (Launch)" },
@@ -438,14 +438,14 @@ export default function App() {
   const testimonialPartners = [
     { 
       name: 'Silvia Quiros (@silviaquiros)', 
-      img: 'https://images.unsplash.com/photo-1595959183082-7b570b7e08e2?q=80&w=200&auto=format&fit=crop', 
+      img: 'https://i.ibb.co/R43jN24B/silviaquiros.webp?q=80&w=200&auto=format&fit=crop', 
       stats: 'Makeup & Beauty', 
       quote: '"I\'d been posting tutorials for years without thinking I could turn them into something people would pay for. Mukesh structured everything and handled the whole setup — landing page, checkout, launch — so I didn\'t have to. Seeing the first sales come through was a moment I genuinely wasn\'t expecting."', 
       meta: 'Launched Digital Product' 
     },
     { 
       name: 'Pili Nemer (@pilinemer)', 
-      img: 'https://images.unsplash.com/photo-1548690312-e3b507d17a4d?q=80&w=200&auto=format&fit=crop', 
+      img: 'https://i.ibb.co/PGf6F85y/pilinemer.webp?q=80&w=200&auto=format&fit=crop', 
       stats: 'Fitness & Lifestyle', 
       quote: '"I had loads of content but no real way to hand followers something they could follow start to finish. Getting it structured into an actual system made everything click, and the response when we launched genuinely surprised me. It feels good to finally have something solid to point people toward."', 
       meta: 'Systemized Coaching' 
@@ -570,7 +570,7 @@ export default function App() {
                     layoutId={`study-${study.id}`} 
                     key={study.id} 
                     onClick={() => setSelectedStudy(study)} 
-                    className="group bg-white border border-gray-200/80 rounded-[2rem] p-5 cursor-pointer shadow-[0_12px_35px_rgba(0,0,0,0.08)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col"
+                    className="group bg-white border border-gray-200/80 rounded-[2rem] p-5 cursor-pointer shadow-[0_12px_35px_rgba(0,0,0,0.08)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1.5 transition-all duration-300 overflow-hidden flex flex-col transform-gpu"
                   >
                     <div className="relative w-full h-[220px] rounded-2xl overflow-hidden mb-5">
                       <img src={study.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="" />
@@ -602,25 +602,43 @@ export default function App() {
         {selectedStudy && (
           <>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedStudy(null)} className="fixed inset-0 bg-[#141414]/90 backdrop-blur-md z-[1000] cursor-zoom-out" />
-            <motion.div layoutId={`study-${selectedStudy.id}`} className="fixed inset-4 md:inset-10 lg:inset-x-20 xl:inset-x-60 lg:inset-y-10 bg-white z-[1001] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col">
-              <div className="absolute top-4 right-4 z-50">
-                <button onClick={() => setSelectedStudy(null)} className="w-10 h-10 md:w-12 md:h-12 bg-white/20 hover:bg-white/40 backdrop-blur-xl text-white rounded-full flex items-center justify-center transition-all border border-white/20"><i className="fa-solid fa-xmark text-lg"></i></button>
+            <motion.div 
+              layoutId={`study-${selectedStudy.id}`} 
+              transition={{ type: "spring", damping: 25, stiffness: 350, mass: 0.6 }}
+              className="fixed inset-4 md:inset-10 lg:inset-x-20 xl:inset-x-60 lg:inset-y-10 bg-white z-[1001] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col transform-gpu will-change-transform"
+            >
+              <div className="absolute top-4 right-4 z-[1002]">
+                <button 
+                  onClick={() => setSelectedStudy(null)} 
+                  className="w-10 h-10 md:w-12 md:h-12 bg-[#ccc]/80 hover:bg-[#ccc] backdrop-blur-xl text-[#141414] rounded-full flex items-center justify-center transition-all border border-white/20 shadow-lg"
+                >
+                  <i className="fa-solid fa-xmark text-lg"></i>
+                </button>
               </div>
+              
               <div className="flex-1 overflow-y-auto no-scrollbar pb-16">
-                <div className="relative h-[25vh] md:h-[35vh] w-full">
-                  <img src={selectedStudy.image} className="w-full h-full object-cover" alt="" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-                  <div className="absolute bottom-8 left-6 md:left-12">
-                    <div className="flex gap-2 mb-3">
-                        <span className="bg-[#F4753D] text-white text-xs font-bold px-4 py-1.5 rounded-full">{selectedStudy.handle}</span>
-                        <span className="bg-[#141414] text-white text-xs font-bold px-4 py-1.5 rounded-full">{selectedStudy.niche}</span>
+                <div className="flex flex-col items-center">
+                  {/* Image Container - Optimized for Square Assets */}
+                  <div className="w-full flex justify-center bg-gray-50 md:bg-white  md:pt-0">
+                    <div className="relative w-full max-w-full md:max-w-2xl aspect-square md:aspect-video lg:aspect-square md:max-h-[50vh] shrink-0 overflow-hidden md:rounded-b-[2rem] shadow-sm">
+                      <img src={selectedStudy.image} className="w-full h-full object-cover transform-gpu" alt="" />
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-[#141414] tracking-tighter">{selectedStudy.title}</h2>
+                  </div>
+                  
+                  {/* Header Content - Now consistent across PC and Mobile (placed below image) */}
+                  <div className="w-full px-6 py-8 md:px-12 lg:px-20 text-center md:text-left">
+                    <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                        <span className="bg-[#F4753D] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.handle}</span>
+                        <span className="bg-[#141414] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.niche}</span>
+                    </div>
+                    <h2 className="text-3xl md:text-5xl font-black text-[#141414] tracking-tighter leading-tight max-w-3xl mx-auto md:mx-0">
+                      {selectedStudy.title}
+                    </h2>
                   </div>
                 </div>
 
-                <div className="px-6 md:px-12 lg:px-20 py-8">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div className="px-6 md:px-12 lg:px-20 pb-8">
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-gray-100 pt-10">
                     <div className="lg:col-span-8 space-y-12">
                       <section>
                         <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Situation</h4>
