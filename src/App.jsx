@@ -620,16 +620,19 @@ export default function App() {
       <AnimatePresence>
         {selectedStudy && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedStudy(null)} className="fixed inset-0 bg-[#141414]/90 backdrop-blur-md z-[1000] cursor-zoom-out" />
+            {/* OPTIMIZATION 1: Solid background color instead of backdrop-blur to save GPU on mobile */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedStudy(null)} className="fixed inset-0 bg-[#141414]/98 z-[1000] cursor-zoom-out transform-gpu" />
+            
+            {/* OPTIMIZATION 2: Snappier, less complex spring physics for the layout transition */}
             <motion.div 
               layoutId={`study-${selectedStudy.id}`} 
-              transition={{ type: "spring", damping: 25, stiffness: 350, mass: 0.6 }}
+              transition={{ type: "spring", bounce: 0.15, duration: 0.4 }}
               className="fixed inset-4 md:inset-10 lg:inset-x-20 xl:inset-x-60 lg:inset-y-10 bg-white z-[1001] rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl flex flex-col transform-gpu will-change-transform"
             >
               <div className="absolute top-4 right-4 z-[1002]">
                 <button 
                   onClick={() => setSelectedStudy(null)} 
-                  className="w-10 h-10 md:w-12 md:h-12 bg-[#ccc]/80 hover:bg-[#ccc] backdrop-blur-xl text-[#141414] rounded-full flex items-center justify-center transition-all border border-white/20 shadow-lg"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-[#e5e5e5] hover:bg-[#ccc] text-[#141414] rounded-full flex items-center justify-center transition-all border border-white/20 shadow-lg"
                 >
                   <i className="fa-solid fa-xmark text-lg"></i>
                 </button>
@@ -637,10 +640,10 @@ export default function App() {
               
               <div className="flex-1 overflow-y-auto no-scrollbar pb-16">
                 <div className="flex flex-col items-center">
-                  {/* Image Container - Optimized for Square Assets */}
+                  
+                  {/* Image Container - Always visible immediately */}
                   <div className="w-full flex justify-center bg-gray-50 md:bg-white md:pt-0">
                     <div className="relative w-full max-w-full md:max-w-2xl aspect-square md:aspect-video lg:aspect-square md:max-h-[50vh] shrink-0 overflow-hidden md:rounded-b-[2rem] shadow-sm">
-                      {/* Modal image is loaded eagerly because it's immediately needed by the user interaction */}
                       <img 
                         src={selectedStudy.image} 
                         loading="eager"
@@ -650,83 +653,91 @@ export default function App() {
                     </div>
                   </div>
                   
-                  {/* Header Content */}
-                  <div className="w-full px-6 py-8 md:px-12 lg:px-20 text-center md:text-left">
-                    <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
-                        <span className="bg-[#F4753D] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.handle}</span>
-                        <span className="bg-[#141414] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.niche}</span>
+                  {/* OPTIMIZATION 3: Fade in the heavy text content slightly AFTER the modal expands to prevent layout thrashing */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    transition={{ delay: 0.1, duration: 0.3 }}
+                    className="w-full flex flex-col items-center"
+                  >
+                    {/* Header Content */}
+                    <div className="w-full px-6 py-8 md:px-12 lg:px-20 text-center md:text-left">
+                      <div className="flex flex-wrap justify-center md:justify-start gap-2 mb-4">
+                          <span className="bg-[#F4753D] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.handle}</span>
+                          <span className="bg-[#141414] text-white text-xs font-bold px-5 py-1.5 rounded-full">{selectedStudy.niche}</span>
+                      </div>
+                      <h2 className="text-3xl md:text-5xl font-black text-[#141414] tracking-tighter leading-tight max-w-3xl mx-auto md:mx-0">
+                        {selectedStudy.title}
+                      </h2>
                     </div>
-                    <h2 className="text-3xl md:text-5xl font-black text-[#141414] tracking-tighter leading-tight max-w-3xl mx-auto md:mx-0">
-                      {selectedStudy.title}
-                    </h2>
-                  </div>
-                </div>
 
-                <div className="px-6 md:px-12 lg:px-20 pb-8">
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-gray-100 pt-10">
-                    <div className="lg:col-span-8 space-y-12">
-                      <section>
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Situation</h4>
-                        <div className="space-y-4">
-                          {selectedStudy.situation.map((para, i) => (
-                            <p key={i} className="text-gray-600 text-lg md:text-xl font-medium leading-relaxed">{para}</p>
-                          ))}
+                    <div className="px-6 md:px-12 lg:px-20 pb-8 w-full">
+                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 border-t border-gray-100 pt-10">
+                        <div className="lg:col-span-8 space-y-12">
+                          <section>
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Situation</h4>
+                            <div className="space-y-4">
+                              {selectedStudy.situation.map((para, i) => (
+                                <p key={i} className="text-gray-600 text-lg md:text-xl font-medium leading-relaxed">{para}</p>
+                              ))}
+                            </div>
+                          </section>
+                          <section className="bg-gray-50 rounded-[2.5rem] p-8 md:p-10 border border-gray-100">
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-6">Implementation</h4>
+                            <p className="text-[#141414] text-lg font-bold mb-8 leading-snug">{selectedStudy.implementation.intro}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                              <div>
+                                <h5 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">The Program Included:</h5>
+                                <ul className="space-y-3">
+                                  {selectedStudy.implementation.product.map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3 text-[#141414] font-bold text-sm">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#F4753D]"></span> {item}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                              <div>
+                                <h5 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Launch Content Pillars:</h5>
+                                <ul className="space-y-3">
+                                  {selectedStudy.implementation.content.map((item, i) => (
+                                    <li key={i} className="flex items-center gap-3 text-[#141414] font-bold text-sm">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-[#141414]"></span> {item}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </section>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <section>
+                              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Observation</h4>
+                              <p className="text-gray-600 font-medium text-base leading-relaxed">{selectedStudy.observation}</p>
+                            </section>
+                            <section>
+                              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Adjustment</h4>
+                              <p className="text-[#141414] font-bold text-base leading-relaxed italic">"{selectedStudy.adjustment}"</p>
+                            </section>
+                          </div>
                         </div>
-                      </section>
-                      <section className="bg-gray-50 rounded-[2.5rem] p-8 md:p-10 border border-gray-100">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-6">Implementation</h4>
-                        <p className="text-[#141414] text-lg font-bold mb-8 leading-snug">{selectedStudy.implementation.intro}</p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                          <div>
-                            <h5 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">The Program Included:</h5>
-                            <ul className="space-y-3">
-                              {selectedStudy.implementation.product.map((item, i) => (
-                                <li key={i} className="flex items-center gap-3 text-[#141414] font-bold text-sm">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#F4753D]"></span> {item}
+                        <div className="lg:col-span-4 space-y-8">
+                          <div className="bg-gradient-to-br from-black to-[#1a0600] rounded-[2.5rem] p-8 text-white shadow-xl sticky top-8">
+                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-6 border-b border-white/10 pb-4">Results</h4>
+                            <ul className="space-y-6">
+                              {selectedStudy.result.map((res, i) => (
+                                <li key={i} className="flex items-start gap-4">
+                                  <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-[#F4753D] shrink-0 mt-0.5"><i className="fa-solid fa-check"></i></span>
+                                  <p className="text-base font-bold leading-tight">{res}</p>
                                 </li>
                               ))}
                             </ul>
+                            <div className="mt-12 pt-8 border-t border-white/10">
+                              <button onClick={() => { setSelectedStudy(null); window.location.hash = "#apply"; }} className="w-full bg-[#F4753D] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg shadow-orange-600/20">Diagnose My Brand</button>
+                            </div>
                           </div>
-                          <div>
-                            <h5 className="text-xs font-black uppercase tracking-widest text-gray-400 mb-4">Launch Content Pillars:</h5>
-                            <ul className="space-y-3">
-                              {selectedStudy.implementation.content.map((item, i) => (
-                                <li key={i} className="flex items-center gap-3 text-[#141414] font-bold text-sm">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#141414]"></span> {item}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </section>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                        <section>
-                          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Observation</h4>
-                          <p className="text-gray-600 font-medium text-base leading-relaxed">{selectedStudy.observation}</p>
-                        </section>
-                        <section>
-                          <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-4">Adjustment</h4>
-                          <p className="text-[#141414] font-bold text-base leading-relaxed italic">"{selectedStudy.adjustment}"</p>
-                        </section>
-                      </div>
-                    </div>
-                    <div className="lg:col-span-4 space-y-8">
-                      <div className="bg-gradient-to-br from-black to-[#1a0600] rounded-[2.5rem] p-8 text-white shadow-xl sticky top-8">
-                        <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#F4753D] mb-6 border-b border-white/10 pb-4">Results</h4>
-                        <ul className="space-y-6">
-                          {selectedStudy.result.map((res, i) => (
-                            <li key={i} className="flex items-start gap-4">
-                              <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-[#F4753D] shrink-0 mt-0.5"><i className="fa-solid fa-check"></i></span>
-                              <p className="text-base font-bold leading-tight">{res}</p>
-                            </li>
-                          ))}
-                        </ul>
-                        <div className="mt-12 pt-8 border-t border-white/10">
-                          <button onClick={() => { setSelectedStudy(null); window.location.hash = "#apply"; }} className="w-full bg-[#F4753D] text-white py-4 rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-orange-600 transition-all shadow-lg shadow-orange-600/20">Diagnose My Brand</button>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
