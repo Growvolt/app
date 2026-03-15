@@ -295,7 +295,7 @@ export default function App() {
   ];
 
   const operatorData = [
-    { name: "Mukesh", designation: "Shadow Operator", quote: "I’m Mukesh — the one behind your launch system, turning audience demand into digital products and scalable creator-owned revenue.", src:"https://i.ibb.co/yckJphXq/M-pramar.webp?q=80&w=1000&auto=format&fit=crop" },
+    { name: "Mukesh", designation: "Shadow Operator", quote: "I’m Mukesh — the one behind your launch system, turning audience demand into digital products and scalable creator-owned revenue.", src:"https://i.ibb.co/s97G6Wd8/m-parmar.webp?q=80&w=1000&auto=format&fit=crop" },
     { src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" },
     { src: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=1000&auto=format&fit=crop" }
   ];
